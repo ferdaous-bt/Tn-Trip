@@ -4,15 +4,9 @@ Application web de planification de voyages en Tunisie avec intelligence artific
 
 ## 📹 Vidéo de Démonstration
 
-> **Ajoutez votre vidéo de démonstration ici**
->
-> Pour ajouter votre vidéo:
-> 1. Uploadez votre vidéo sur YouTube
-> 2. Remplacez le lien ci-dessous par votre lien YouTube
->
-> [![Démo TUN Trip](https://img.youtube.com/vi/VOTRE_VIDEO_ID/maxresdefault.jpg)](https://www.youtube.com/watch?v=VOTRE_VIDEO_ID)
+**[▶️ Voir la vidéo de démonstration](https://drive.google.com/file/d/1dGBtgYlIaUWIE0Hrz29n9unQyeUX5-tn/view?usp=sharing)**
 
-Ou ajoutez directement la vidéo dans le dossier `demo/` et liez-la ici.
+Découvrez toutes les fonctionnalités de TUN Trip en vidéo: planification IA, sélection manuelle de destinations, gestion des voyages, et bien plus!
 
 ## ✨ Fonctionnalités
 
