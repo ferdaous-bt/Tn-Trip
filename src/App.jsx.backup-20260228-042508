@@ -1,0 +1,1220 @@
+import { useState, useEffect, useRef } from "react";
+
+var TN={
+  bg:"#f8f9fa",
+  card:"#ffffff",
+  pr:"#d4874f",
+  pD:"#9f5e3a",
+  ac:"#2196f3",
+  aL:"#e3f2fd",
+  sand:"#fff4e6",
+  sD:"#d4b896",
+  tile:"#2d6a7a",
+  tx:"#1a1a1a",
+  tM:"#5c5c5c",
+  tL:"#9e9e9e",
+  bd:"#e0e0e0",
+  gn:"#4caf50",
+  rd:"#f44336",
+  shadow:"0 2px 8px rgba(0,0,0,0.08)",
+  shadowMd:"0 4px 16px rgba(0,0,0,0.12)",
+  shadowLg:"0 8px 32px rgba(0,0,0,0.16)"
+};
+var F="'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif",F2="'Inter',system-ui,sans-serif";
+
+var SLIDES=[
+  {t:"Sidi Bou Saïd",s:"Village bleu et blanc iconique",id:"sbs"},
+  {t:"Sahara Tunisien",s:"Dunes dorées et oasis secrètes",id:"sahara"},
+  {t:"Forêts du Nord",s:"Tabarka & Aïn Draham verdoyants",id:"foret"},
+  {t:"Djerba la Douce",s:"Île aux mille couleurs",id:"djerba"},
+  {t:"Amphithéâtre El Jem",s:"Patrimoine romain UNESCO",id:"eljem"},
+  {t:"Tozeur & Chott el-Jérid",s:"Oasis millénaires et mirages",id:"tozeur"}
+];
+// SVG scene components for carousel
+function SlideScene(props){
+  var id=props.id,w=400,h=200;
+  if(id==="sbs") return <svg viewBox={"0 0 "+w+" "+h} width="100%" height="100%">
+    <defs><linearGradient id="sky1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#87CEEB"/><stop offset="100%" stopColor="#E0F4FF"/></linearGradient></defs>
+    <rect width={w} height={h} fill="url(#sky1)"/>
+    <circle cx="340" cy="40" r="22" fill="#FFE066" opacity=".9"/>
+    <rect x="0" y="130" width={w} height="70" fill="#4A90D9" opacity=".3" rx="2"/>
+    <rect x="30" y="60" width="50" height="70" rx="3" fill="#fff" stroke="#5BA3E0" strokeWidth="1.5"/>
+    <rect x="40" y="72" width="14" height="18" rx="6" fill="#2E86C1" stroke="#fff" strokeWidth="1"/>
+    <rect x="56" y="72" width="14" height="18" rx="6" fill="#2E86C1" stroke="#fff" strokeWidth="1"/>
+    <rect x="48" y="100" width="12" height="30" rx="2" fill="#2E86C1"/>
+    <path d="M28,60 L55,42 L82,60" fill="#fff" stroke="#5BA3E0" strokeWidth="1"/>
+    <rect x="100" y="50" width="60" height="80" rx="3" fill="#fff" stroke="#5BA3E0" strokeWidth="1.5"/>
+    <rect x="112" y="62" width="16" height="20" rx="7" fill="#2E86C1" stroke="#F4D03F" strokeWidth="1.5"/>
+    <rect x="134" y="62" width="16" height="20" rx="7" fill="#2E86C1" stroke="#F4D03F" strokeWidth="1.5"/>
+    <rect x="120" y="95" width="18" height="35" rx="3" fill="#2E86C1"/>
+    <path d="M98,50 L130,30 L162,50" fill="#fff" stroke="#5BA3E0" strokeWidth="1"/>
+    <rect x="180" y="70" width="45" height="60" rx="3" fill="#E8F0FE" stroke="#5BA3E0" strokeWidth="1"/>
+    <rect x="190" y="82" width="12" height="15" rx="5" fill="#2E86C1"/>
+    <rect x="206" y="82" width="8" height="10" rx="2" fill="#5DADE2"/>
+    <rect x="192" y="105" width="16" height="25" rx="2" fill="#1A5276"/>
+    <rect x="250" y="55" width="55" height="75" rx="3" fill="#fff" stroke="#5BA3E0" strokeWidth="1.5"/>
+    <rect x="262" y="67" width="14" height="18" rx="6" fill="#2E86C1" stroke="#F4D03F" strokeWidth="1.5"/>
+    <rect x="280" y="67" width="10" height="14" rx="3" fill="#5DADE2"/>
+    <rect x="270" y="98" width="14" height="32" rx="3" fill="#2E86C1"/>
+    <circle cx="275" cy="49" r="8" fill="#fff" stroke="#5BA3E0" strokeWidth="1"/>
+    <path d="M248,55 L277,38 L307,55" fill="#fff" stroke="#5BA3E0" strokeWidth="1"/>
+    <rect x="320" y="75" width="40" height="55" rx="3" fill="#E8F0FE" stroke="#5BA3E0" strokeWidth="1"/>
+    <rect x="330" y="86" width="10" height="14" rx="4" fill="#2E86C1"/>
+    <rect x="344" y="86" width="8" height="10" rx="2" fill="#5DADE2"/>
+    <path d="M0,140 Q100,125 200,142 Q300,155 400,135 L400,200 L0,200Z" fill="#4A90D9" opacity=".4"/>
+    <circle cx="60" cy="150" r="2" fill="#fff" opacity=".6"/><circle cx="180" cy="148" r="1.5" fill="#fff" opacity=".5"/><circle cx="300" cy="152" r="2" fill="#fff" opacity=".6"/>
+  </svg>;
+  if(id==="sahara") return <svg viewBox={"0 0 "+w+" "+h} width="100%" height="100%">
+    <defs><linearGradient id="sky2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#FF8C42"/><stop offset="50%" stopColor="#FFB366"/><stop offset="100%" stopColor="#F5DEB3"/></linearGradient></defs>
+    <rect width={w} height={h} fill="url(#sky2)"/>
+    <circle cx="320" cy="45" r="30" fill="#FFD700" opacity=".8"/>
+    <circle cx="320" cy="45" r="25" fill="#FFF8DC" opacity=".3"/>
+    <path d="M0,130 Q50,100 120,120 Q200,90 280,115 Q350,95 400,110 L400,200 L0,200Z" fill="#DAA520"/>
+    <path d="M0,145 Q80,120 160,140 Q240,115 320,135 Q370,120 400,130 L400,200 L0,200Z" fill="#C19A3E"/>
+    <path d="M0,160 Q100,145 200,158 Q300,148 400,155 L400,200 L0,200Z" fill="#8B6914" opacity=".6"/>
+    <g transform="translate(60,105) scale(.6)"><path d="M0,40 L8,10 C12,0 18,0 22,10 L30,40 L26,38 L22,30 L20,40 L18,30 L14,42 L10,30 L8,40Z" fill="#5D4E37" opacity=".7"/><ellipse cx="15" cy="42" rx="18" ry="4" fill="#5D4E37" opacity=".3"/></g>
+    <g transform="translate(250,98) scale(.7)"><path d="M0,40 L8,10 C12,0 18,0 22,10 L30,40 L26,38 L22,30 L20,40 L18,30 L14,42 L10,30 L8,40Z" fill="#5D4E37" opacity=".6"/></g>
+    <g transform="translate(150,115) scale(.5)"><line x1="10" y1="30" x2="10" y2="0" stroke="#2D5016" strokeWidth="2"/><ellipse cx="10" cy="2" rx="10" ry="5" fill="#27AE60" opacity=".7"/><ellipse cx="10" cy="5" rx="8" ry="4" fill="#1E8449" opacity=".6"/></g>
+    {[20,60,130,200,280,350].map(function(x,i){return <circle key={i} cx={x} cy={160+i%3*5} r={1+i%2} fill="#FFE066" opacity=".3"/>})}
+  </svg>;
+  if(id==="foret") return <svg viewBox={"0 0 "+w+" "+h} width="100%" height="100%">
+    <defs><linearGradient id="sky3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#87CEEB"/><stop offset="100%" stopColor="#B8E6B8"/></linearGradient></defs>
+    <rect width={w} height={h} fill="url(#sky3)"/>
+    <path d="M0,100 Q40,70 80,85 Q120,60 180,75 Q220,50 270,70 Q320,55 370,65 Q390,60 400,68 L400,200 L0,200Z" fill="#2D7A3A" opacity=".3"/>
+    <path d="M0,120 Q60,95 120,110 Q180,85 240,105 Q300,80 360,100 Q390,90 400,95 L400,200 L0,200Z" fill="#1B5E20"/>
+    {[30,90,150,210,270,340].map(function(x,i){var th=40+i%3*15;return <g key={i}><line x1={x} y1={120-th/3} x2={x} y2={150} stroke="#4E342E" strokeWidth="3"/>
+    <polygon points={(x-12)+","+(120-th/3+10)+" "+x+","+(120-th)+" "+(x+12)+","+(120-th/3+10)} fill={i%2?"#27AE60":"#1B7A33"}/>
+    <polygon points={(x-9)+","+(120-th/3-2)+" "+x+","+(120-th+12)+" "+(x+9)+","+(120-th/3-2)} fill={i%2?"#2ECC71":"#229954"}/>
+    </g>})}
+    <path d="M0,150 Q100,140 200,148 Q300,138 400,145 L400,200 L0,200Z" fill="#1B5E20" opacity=".8"/>
+    <path d="M0,165 Q80,158 200,163 Q320,155 400,162 L400,200 L0,200Z" fill="#145A1E"/>
+    <circle cx="50" cy="155" r="2" fill="#8BC34A" opacity=".5"/><circle cx="190" cy="150" r="1.5" fill="#AED581" opacity=".4"/><circle cx="310" cy="158" r="2" fill="#8BC34A" opacity=".5"/>
+  </svg>;
+  if(id==="djerba") return <svg viewBox={"0 0 "+w+" "+h} width="100%" height="100%">
+    <defs><linearGradient id="sky4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#0093D1"/><stop offset="100%" stopColor="#48CAE4"/></linearGradient></defs>
+    <rect width={w} height={h} fill="url(#sky4)"/>
+    <circle cx="70" cy="35" r="25" fill="#FFE066" opacity=".9"/>
+    <path d="M0,130 Q100,120 200,128 Q300,118 400,125 L400,200 L0,200Z" fill="#00B4D8" opacity=".5"/>
+    <path d="M0,140 Q50,132 120,138 Q200,130 280,136 Q350,128 400,135 L400,155 Q300,148 200,152 Q100,145 0,150Z" fill="#48CAE4" opacity=".4"/>
+    <path d="M0,150 L400,145 L400,200 L0,200Z" fill="#F5DEB3"/>
+    <path d="M0,155 Q100,150 200,153 Q300,148 400,152 L400,200 L0,200Z" fill="#E8D5B0"/>
+    <g transform="translate(280,80)"><line x1="0" y1="0" x2="0" y2="-50" stroke="#8B6914" strokeWidth="3"/><path d="M0,-50 Q-15,-55 -25,-42" stroke="#27AE60" strokeWidth="2.5" fill="none"/><path d="M0,-50 Q15,-58 25,-44" stroke="#27AE60" strokeWidth="2.5" fill="none"/><path d="M0,-50 Q-8,-60 -18,-52" stroke="#2ECC71" strokeWidth="2" fill="none"/><path d="M0,-50 Q10,-62 20,-50" stroke="#2ECC71" strokeWidth="2" fill="none"/><path d="M0,-50 Q0,-65 5,-55" stroke="#229954" strokeWidth="2" fill="none"/></g>
+    <g transform="translate(340,90)"><line x1="0" y1="0" x2="0" y2="-40" stroke="#8B6914" strokeWidth="2.5"/><path d="M0,-40 Q-12,-45 -20,-35" stroke="#27AE60" strokeWidth="2" fill="none"/><path d="M0,-40 Q12,-48 20,-36" stroke="#2ECC71" strokeWidth="2" fill="none"/></g>
+    <rect x="100" y="100" width="35" height="30" rx="2" fill="#fff" stroke="#48CAE4" strokeWidth="1"/>
+    <rect x="108" y="108" width="8" height="10" rx="3" fill="#2E86C1"/>
+    <rect x="120" y="108" width="8" height="10" rx="3" fill="#2E86C1"/>
+    <path d="M98,100 L117,85 L137,100" fill="#fff" stroke="#48CAE4" strokeWidth="1"/>
+    <rect x="150" y="108" width="28" height="22" rx="2" fill="#FFE8CC" stroke="#DAA520" strokeWidth="1"/>
+    <rect x="158" y="114" width="10" height="16" rx="2" fill="#C17F3E"/>
+    <circle cx="60" cy="160" r="3" fill="#FF6B6B" opacity=".6"/><circle cx="200" cy="155" r="2" fill="#FF6B6B" opacity=".4"/>
+  </svg>;
+  if(id==="eljem") return <svg viewBox={"0 0 "+w+" "+h} width="100%" height="100%">
+    <defs><linearGradient id="sky5" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#87CEEB"/><stop offset="100%" stopColor="#D4E6F1"/></linearGradient></defs>
+    <rect width={w} height={h} fill="url(#sky5)"/>
+    <circle cx="350" cy="35" r="20" fill="#FFE066" opacity=".7"/>
+    <rect x="60" y="140" width="280" height="60" fill="#C19A6B" rx="2"/>
+    <rect x="70" y="90" width="260" height="50" fill="#D4A76A" rx="2"/>
+    <rect x="80" y="55" width="240" height="35" fill="#E0BB80" rx="2"/>
+    {[85,125,165,205,245,285].map(function(x,i){return <g key={i}>
+      <rect x={x} y="95" width="8" height="45" rx="2" fill="#B8860B"/>
+      <ellipse cx={x+4} cy="93" rx="6" ry="4" fill="#C19A6B"/>
+    </g>})}
+    {[75,120,165,210,255,300,340].map(function(x,i){return <g key={i}>
+      <rect x={x} y="145" width="10" height="50" rx="2" fill="#A0785A"/>
+      <path d={"M"+(x-2)+",145 A12,12 0 0,1 "+(x+12)+",145"} fill="none" stroke="#8B6914" strokeWidth="2"/>
+    </g>})}
+    {[100,150,200,250,300].map(function(x,i){return <path key={i} d={"M"+(x-5)+",60 A10,10 0 0,1 "+(x+13)+",60"} fill="none" stroke="#8B6914" strokeWidth="1.5"/>})}
+    <path d="M0,170 Q100,165 200,168 Q300,163 400,167 L400,200 L0,200Z" fill="#C4A265" opacity=".5"/>
+    <path d="M0,180 L400,175 L400,200 L0,200Z" fill="#8B6914" opacity=".2"/>
+  </svg>;
+  // Tozeur
+  return <svg viewBox={"0 0 "+w+" "+h} width="100%" height="100%">
+    <defs><linearGradient id="sky6" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#FFB84D"/><stop offset="60%" stopColor="#F5DEB3"/><stop offset="100%" stopColor="#E8D5B0"/></linearGradient></defs>
+    <rect width={w} height={h} fill="url(#sky6)"/>
+    <circle cx="300" cy="40" r="25" fill="#FFD700" opacity=".8"/>
+    <path d="M0,120 L400,120 L400,200 L0,200Z" fill="#DCDCDC" opacity=".15"/>
+    <path d="M0,140 Q80,135 200,138 Q320,132 400,137 L400,200 L0,200Z" fill="#F5DEB3"/>
+    <ellipse cx="200" cy="155" rx="180" ry="8" fill="#E0E7F0" opacity=".3"/>
+    <ellipse cx="200" cy="155" rx="140" ry="5" fill="#C0D4E8" opacity=".2"/>
+    {[60,120,180,250,320].map(function(x,i){var h2=35+i%3*10;return <g key={i}>
+      <line x1={x} y1={140-h2} x2={x} y2={140} stroke="#8B6914" strokeWidth="2.5"/>
+      <path d={("M"+x+","+(140-h2)+" Q"+(x-15)+","+(140-h2-8)+" "+(x-22)+","+(140-h2+5))} stroke="#27AE60" strokeWidth="2" fill="none"/>
+      <path d={("M"+x+","+(140-h2)+" Q"+(x+15)+","+(140-h2-10)+" "+(x+22)+","+(140-h2+3))} stroke="#2ECC71" strokeWidth="2" fill="none"/>
+      <path d={("M"+x+","+(140-h2)+" Q"+(x-5)+","+(140-h2-15)+" "+(x-12)+","+(140-h2-5))} stroke="#229954" strokeWidth="1.5" fill="none"/>
+      <path d={("M"+x+","+(140-h2)+" Q"+(x+8)+","+(140-h2-14)+" "+(x+15)+","+(140-h2-3))} stroke="#27AE60" strokeWidth="1.5" fill="none"/>
+    </g>})}
+    <path d="M0,160 Q100,155 200,158 Q300,153 400,157 L400,200 L0,200Z" fill="#C19A3E" opacity=".4"/>
+    <rect x="150" y="118" width="22" height="22" rx="1" fill="#D4A76A" stroke="#B8860B" strokeWidth=".5"/>
+    <rect x="155" y="123" width="5" height="8" rx="1" fill="#8B6914"/><rect x="163" y="123" width="5" height="8" rx="1" fill="#8B6914"/>
+    <rect x="195" y="112" width="18" height="28" rx="1" fill="#E0BB80" stroke="#B8860B" strokeWidth=".5"/>
+    <rect x="200" y="118" width="6" height="10" rx="2" fill="#8B6914"/>
+  </svg>;
+}
+
+var CATS={attraction:{i:"🏛️",l:"Attractions"},restaurant:{i:"🍽️",l:"Restaurants"},cafe:{i:"☕",l:"Cafés"},hotel:{i:"🏨",l:"Hôtels"},beach:{i:"🏖️",l:"Plages"},activity:{i:"🎯",l:"Activités"},nature:{i:"🌿",l:"Nature"},mosque:{i:"🕌",l:"Mosquées"}};
+
+var REGIONS=[
+  {id:"tunis",name:"Grand Tunis",icon:"🏛️",lt:36.81,lg:10.18,subs:["Tunis Centre","Carthage & Sidi Bou Saïd","La Marsa & Gammarth"]},
+  {id:"sahel",name:"Sahel",icon:"🏟️",lt:35.75,lg:10.70,subs:["Sousse","Monastir","Mahdia"]},
+  {id:"nord_ouest",name:"Nord-Ouest",icon:"🌲",lt:36.60,lg:8.90,subs:["Tabarka","Aïn Draham","Béja","Le Kef","Testour & Dougga","Bou Salem"]},
+  {id:"nord_est",name:"Nord-Est",icon:"⚓",lt:37.27,lg:9.87,subs:["Bizerte","Ichkeul","Raf Raf","Ghar El Melh"]},
+  {id:"zaghouan",name:"Zaghouan",icon:"⛰️",lt:36.40,lg:10.14,subs:["Zaghouan","Jbel Oust"]},
+  {id:"cap_bon",name:"Cap Bon",icon:"🌊",lt:36.60,lg:10.80,subs:["Hammamet","Nabeul","Kélibia","Korbus","El Haouaria","Korba","Soliman"]},
+  {id:"centre",name:"Centre",icon:"🕌",lt:35.50,lg:10.30,subs:["Kairouan","El Jem"]},
+  {id:"sud_ouest",name:"Sud-Ouest",icon:"🌴",lt:33.92,lg:8.13,subs:["Tozeur","Nefta & Chebika","Tamerza","Douz"]},
+  {id:"sud_est",name:"Sud-Est",icon:"🏜️",lt:33.50,lg:10.20,subs:["Matmata","Tataouine","Gabès","Médenine & Zarzis"]},
+  {id:"djerba",name:"Djerba",icon:"🏝️",lt:33.81,lg:10.86,subs:["Houmt Souk","Midoun","Erriadh"]},
+  {id:"sfax",name:"Sfax",icon:"🐚",lt:34.74,lg:10.76,subs:["Sfax Ville","Kerkennah"]}
+];
+
+var PL=[
+  {id:"bardo",n:"Musée du Bardo",r:"tunis",sub:"Tunis Centre",cat:"attraction",lt:36.81,lg:10.14,rt:4.7,dur:120,cost:13,hid:false,sn:["printemps","ete","automne","hiver"],cr:.6,d:"Plus grande collection mosaïques romaines au monde.",meal:null},
+  {id:"medina_t",n:"Médina de Tunis",r:"tunis",sub:"Tunis Centre",cat:"attraction",lt:36.80,lg:10.17,rt:4.5,dur:100,cost:0,hid:false,sn:["printemps","automne","hiver"],cr:.88,d:"UNESCO. 700+ monuments, mosquée Zitouna.",meal:null},
+  {id:"marche",n:"Marché Central",r:"tunis",sub:"Tunis Centre",cat:"attraction",lt:36.80,lg:10.18,rt:4.2,dur:50,cost:0,hid:false,sn:["printemps","ete","automne","hiver"],cr:.78,d:"Poissons, épices, olives, harissa artisanale.",meal:null},
+  {id:"fondouk",n:"Fondouk El Attarine",r:"tunis",sub:"Tunis Centre",cat:"cafe",lt:36.80,lg:10.17,rt:4.4,dur:40,cost:12,hid:true,sn:["printemps","ete","automne","hiver"],cr:.35,d:"Thé à la menthe dans fondouk du XVIIe.",meal:"breakfast"},
+  {id:"cafe_mr",n:"Café M'Rabet",r:"tunis",sub:"Tunis Centre",cat:"cafe",lt:36.80,lg:10.17,rt:4.3,dur:35,cost:8,hid:true,sn:["printemps","ete","automne","hiver"],cr:.40,d:"Plus vieux café de Tunis, ftour traditionnel.",meal:"breakfast"},
+  {id:"dar_med",n:"Dar El Medina",r:"tunis",sub:"Tunis Centre",cat:"restaurant",lt:36.80,lg:10.17,rt:4.6,dur:75,cost:45,hid:true,sn:["printemps","ete","automne","hiver"],cr:.25,d:"Gastronomie raffinée dans palais XVIIIe.",meal:"dinner"},
+  {id:"belhadj",n:"Dar Bel Hadj",r:"tunis",sub:"Tunis Centre",cat:"restaurant",lt:36.80,lg:10.17,rt:4.5,dur:70,cost:35,hid:false,sn:["printemps","ete","automne","hiver"],cr:.30,d:"Couscous au mérou, cadre somptueux.",meal:"lunch"},
+  {id:"belved",n:"Parc du Belvédère",r:"tunis",sub:"Tunis Centre",cat:"nature",lt:36.82,lg:10.16,rt:4.0,dur:50,cost:0,hid:true,sn:["printemps","ete","automne"],cr:.35,d:"110 ha de verdure, zoo, koubba.",meal:null},
+  {id:"carthage",n:"Site de Carthage",r:"tunis",sub:"Carthage & Sidi Bou Saïd",cat:"attraction",lt:36.85,lg:10.32,rt:4.6,dur:100,cost:12,hid:false,sn:["printemps","automne","hiver"],cr:.82,d:"UNESCO. Thermes d'Antonin, Byrsa.",meal:null},
+  {id:"sbs",n:"Sidi Bou Saïd",r:"tunis",sub:"Carthage & Sidi Bou Saïd",cat:"attraction",lt:36.87,lg:10.35,rt:4.8,dur:80,cost:0,hid:false,sn:["printemps","ete","automne"],cr:.85,d:"Village bleu et blanc mythique.",meal:null},
+  {id:"nattes",n:"Café des Nattes",r:"tunis",sub:"Carthage & Sidi Bou Saïd",cat:"cafe",lt:36.87,lg:10.35,rt:4.5,dur:40,cost:8,hid:false,sn:["printemps","ete","automne"],cr:.80,d:"Café historique 1700. Thé aux pignons.",meal:"breakfast"},
+  {id:"zarrouk",n:"Dar Zarrouk",r:"tunis",sub:"Carthage & Sidi Bou Saïd",cat:"restaurant",lt:36.87,lg:10.35,rt:4.7,dur:80,cost:65,hid:false,sn:["printemps","ete","automne"],cr:.40,d:"Table gastronomique vue panoramique mer.",meal:"dinner"},
+  {id:"bonvieux",n:"Au Bon Vieux Temps",r:"tunis",sub:"Carthage & Sidi Bou Saïd",cat:"restaurant",lt:36.87,lg:10.35,rt:4.4,dur:70,cost:40,hid:false,sn:["printemps","ete","automne"],cr:.55,d:"Terrasse vue mer, méditerranéenne.",meal:"lunch"},
+  {id:"marsa_pl",n:"Plage La Marsa",r:"tunis",sub:"La Marsa & Gammarth",cat:"beach",lt:36.88,lg:10.33,rt:4.3,dur:100,cost:0,hid:false,sn:["ete","printemps"],cr:.65,d:"Banlieue balnéaire chic, galeries.",meal:null},
+  {id:"boga",n:"Boga Beach Club",r:"tunis",sub:"La Marsa & Gammarth",cat:"beach",lt:36.89,lg:10.31,rt:4.2,dur:120,cost:30,hid:false,sn:["ete"],cr:.70,d:"Beach club, DJ sets, piscine.",meal:null},
+  {id:"s_med",n:"Médina Sousse",r:"sahel",sub:"Sousse",cat:"attraction",lt:35.83,lg:10.64,rt:4.4,dur:80,cost:0,hid:false,sn:["printemps","automne","hiver"],cr:.65,d:"UNESCO. Ribat VIIIe, Grande Mosquée.",meal:null},
+  {id:"kantaoui",n:"Port El Kantaoui",r:"sahel",sub:"Sousse",cat:"beach",lt:35.89,lg:10.59,rt:4.1,dur:100,cost:0,hid:false,sn:["ete","printemps"],cr:.70,d:"Marina luxe, golf, parc aquatique.",meal:null},
+  {id:"golfe_r",n:"Le Golfe",r:"sahel",sub:"Sousse",cat:"restaurant",lt:35.83,lg:10.64,rt:4.3,dur:70,cost:30,hid:false,sn:["printemps","ete","automne","hiver"],cr:.50,d:"Fruits de mer face au vieux port.",meal:"lunch"},
+  {id:"cafe_s",n:"Café de la Place",r:"sahel",sub:"Sousse",cat:"cafe",lt:35.83,lg:10.64,rt:4.1,dur:35,cost:8,hid:false,sn:["printemps","ete","automne","hiver"],cr:.60,d:"Petit-déjeuner tunisien face médina.",meal:"breakfast"},
+  {id:"takr",n:"Village Takrouna",r:"sahel",sub:"Sousse",cat:"attraction",lt:35.85,lg:10.59,rt:4.5,dur:60,cost:0,hid:true,sn:["printemps","automne"],cr:.08,d:"Village berbère perché spectaculaire.",meal:null},
+  {id:"m_rib",n:"Ribat Monastir",r:"sahel",sub:"Monastir",cat:"attraction",lt:35.78,lg:10.83,rt:4.3,dur:50,cost:8,hid:false,sn:["printemps","ete","automne","hiver"],cr:.50,d:"Forteresse VIIIe, lieu de tournage.",meal:null},
+  {id:"bourg_m",n:"Mausolée Bourguiba",r:"sahel",sub:"Monastir",cat:"attraction",lt:35.78,lg:10.83,rt:4.2,dur:30,cost:0,hid:false,sn:["printemps","ete","automne","hiver"],cr:.40,d:"Monument doré imposant.",meal:null},
+  {id:"marina_m",n:"Marina Monastir",r:"sahel",sub:"Monastir",cat:"cafe",lt:35.78,lg:10.84,rt:4.0,dur:40,cost:12,hid:false,sn:["printemps","ete","automne"],cr:.45,d:"Brunch face aux yachts.",meal:"breakfast"},
+  {id:"neptune",n:"Le Neptune",r:"sahel",sub:"Mahdia",cat:"restaurant",lt:35.51,lg:11.05,rt:4.3,dur:70,cost:25,hid:true,sn:["printemps","ete","automne"],cr:.20,d:"Poisson grillé au port de Mahdia.",meal:"dinner"},
+  {id:"eljem",n:"Amphithéâtre El Jem",r:"centre",sub:"El Jem",cat:"attraction",lt:35.30,lg:10.71,rt:4.9,dur:80,cost:12,hid:false,sn:["printemps","automne","hiver"],cr:.55,d:"3ème colisée romain. UNESCO.",meal:null},
+  {id:"tabarka",n:"Tabarka",r:"nord_ouest",sub:"Tabarka",cat:"nature",lt:36.95,lg:8.76,rt:4.4,dur:120,cost:0,hid:false,sn:["ete","printemps"],cr:.32,d:"Côte de corail, Les Aiguilles.",meal:null},
+  {id:"fort_g",n:"Fort Génois",r:"nord_ouest",sub:"Tabarka",cat:"attraction",lt:36.96,lg:8.75,rt:4.2,dur:40,cost:0,hid:true,sn:["printemps","ete","automne"],cr:.20,d:"Forteresse génoise sur île rocheuse.",meal:null},
+  {id:"resto_tab",n:"Chez Nous",r:"nord_ouest",sub:"Tabarka",cat:"restaurant",lt:36.95,lg:8.76,rt:4.2,dur:65,cost:28,hid:false,sn:["printemps","ete","automne"],cr:.25,d:"Langoustes du corail.",meal:"lunch"},
+  {id:"ain_d",n:"Aïn Draham",r:"nord_ouest",sub:"Aïn Draham",cat:"nature",lt:36.78,lg:8.68,rt:4.3,dur:90,cost:0,hid:true,sn:["ete","printemps","automne"],cr:.15,d:"Village montagne 800m, forêts de chênes.",meal:null},
+  {id:"cafe_f",n:"Café de la Forêt",r:"nord_ouest",sub:"Aïn Draham",cat:"cafe",lt:36.79,lg:8.68,rt:4.1,dur:35,cost:8,hid:true,sn:["ete","printemps","automne"],cr:.10,d:"Thé sous les chênes-lièges centenaires.",meal:"breakfast"},
+  {id:"bulla",n:"Bulla Regia",r:"nord_ouest",sub:"Bulla Regia",cat:"attraction",lt:36.56,lg:8.76,rt:4.5,dur:80,cost:7,hid:true,sn:["printemps","ete","automne"],cr:.12,d:"Villas romaines souterraines uniques.",meal:null},
+  {id:"bizerte",n:"Vieux Port Bizerte",r:"nord_est",sub:"Bizerte",cat:"attraction",lt:37.27,lg:9.87,rt:4.2,dur:70,cost:0,hid:false,sn:["printemps","ete","automne"],cr:.35,d:"Port pittoresque, Kasbah colorée.",meal:null},
+  {id:"mousse",n:"Le Petit Mousse",r:"nord_est",sub:"Bizerte",cat:"restaurant",lt:37.28,lg:9.88,rt:4.3,dur:65,cost:25,hid:false,sn:["printemps","ete","automne"],cr:.30,d:"Poissons grillés face au port.",meal:"lunch"},
+  {id:"ichkeul",n:"Parc Ichkeul",r:"nord_est",sub:"Ichkeul",cat:"nature",lt:37.16,lg:9.67,rt:4.6,dur:100,cost:5,hid:true,sn:["hiver","automne","printemps"],cr:.10,d:"UNESCO. Flamants roses, lac unique.",meal:null},
+  {id:"cafe_biz",n:"Café du Port",r:"nord_est",sub:"Bizerte",cat:"cafe",lt:37.27,lg:9.87,rt:4.0,dur:35,cost:7,hid:false,sn:["printemps","ete","automne"],cr:.30,d:"Bambalouni et café au lait matinal.",meal:"breakfast"},
+  {id:"dougga",n:"Dougga",r:"nord_ouest",sub:"Testour & Dougga",cat:"attraction",lt:36.42,lg:9.22,rt:4.8,dur:100,cost:8,hid:false,sn:["printemps","automne"],cr:.22,d:"Meilleur site romain d'Afrique. UNESCO.",meal:null},
+  {id:"testour",n:"Testour",r:"nord_ouest",sub:"Testour & Dougga",cat:"attraction",lt:36.55,lg:9.45,rt:4.1,dur:50,cost:0,hid:true,sn:["printemps","automne"],cr:.08,d:"Village andalou, horloge inversée.",meal:null},
+  {id:"jugurtha",n:"Table de Jugurtha",r:"nord_ouest",sub:"Le Kef",cat:"nature",lt:35.79,lg:8.39,rt:4.7,dur:100,cost:5,hid:true,sn:["printemps","automne"],cr:.05,d:"Mesa 1271m, randonnée mythique.",meal:null},
+  {id:"h_med",n:"Médina Hammamet",r:"cap_bon",sub:"Hammamet",cat:"attraction",lt:36.39,lg:10.61,rt:4.3,dur:50,cost:0,hid:false,sn:["printemps","ete","automne"],cr:.65,d:"Médina fortifiée face mer, jasmin.",meal:null},
+  {id:"h_pl",n:"Plage Hammamet",r:"cap_bon",sub:"Hammamet",cat:"beach",lt:36.40,lg:10.62,rt:4.4,dur:100,cost:0,hid:false,sn:["ete","printemps"],cr:.60,d:"Sable fin, eaux turquoise.",meal:null},
+  {id:"bella",n:"La Bella Marina",r:"cap_bon",sub:"Hammamet",cat:"restaurant",lt:36.40,lg:10.61,rt:4.4,dur:70,cost:35,hid:false,sn:["printemps","ete","automne"],cr:.50,d:"Tuniso-italienne, terrasse mer.",meal:"dinner"},
+  {id:"nabeul",n:"Nabeul Poteries",r:"cap_bon",sub:"Nabeul",cat:"attraction",lt:36.45,lg:10.74,rt:4.1,dur:70,cost:0,hid:false,sn:["printemps","ete","automne","hiver"],cr:.45,d:"Capitale de la poterie tunisienne.",meal:null},
+  {id:"cafe_hamm",n:"Café Sidi Bouhdid",r:"cap_bon",sub:"Hammamet",cat:"cafe",lt:36.39,lg:10.61,rt:4.3,dur:35,cost:10,hid:false,sn:["printemps","ete","automne"],cr:.55,d:"Bambalouni vue mer, petit-déj.",meal:"breakfast"},
+  {id:"k_mosq",n:"Grande Mosquée",r:"centre",sub:"Kairouan",cat:"mosque",lt:35.68,lg:10.10,rt:4.8,dur:50,cost:0,hid:false,sn:["printemps","automne","hiver"],cr:.60,d:"4ème lieu saint Islam. Fondée 670.",meal:null},
+  {id:"k_med",n:"Médina Kairouan",r:"centre",sub:"Kairouan",cat:"attraction",lt:35.68,lg:10.10,rt:4.4,dur:70,cost:0,hid:false,sn:["printemps","automne","hiver"],cr:.50,d:"UNESCO. Tapis, makroudh artisanal.",meal:null},
+  {id:"aghlab",n:"Bassins Aghlabides",r:"centre",sub:"Kairouan",cat:"attraction",lt:35.69,lg:10.11,rt:4.3,dur:40,cost:5,hid:true,sn:["printemps","automne","hiver"],cr:.35,d:"Prouesse hydraulique IXe siècle.",meal:null},
+  {id:"bouzid",n:"Pâtisserie Bouzid",r:"centre",sub:"Kairouan",cat:"cafe",lt:35.68,lg:10.10,rt:4.5,dur:30,cost:5,hid:false,sn:["printemps","ete","automne","hiver"],cr:.50,d:"Meilleurs makroudh de Kairouan.",meal:"breakfast"},
+  {id:"tozeur",n:"Palmeraie Tozeur",r:"sud_ouest",sub:"Tozeur",cat:"nature",lt:33.92,lg:8.13,rt:4.6,dur:90,cost:5,hid:false,sn:["automne","hiver","printemps"],cr:.38,d:"400 000 palmiers millénaires.",meal:null},
+  {id:"tozeur_v",n:"Ouled El Hadef",r:"sud_ouest",sub:"Tozeur",cat:"attraction",lt:33.92,lg:8.13,rt:4.3,dur:50,cost:0,hid:true,sn:["automne","hiver","printemps"],cr:.30,d:"Briques jaunes géométriques.",meal:null},
+  {id:"chott",n:"Chott el-Jérid",r:"sud_ouest",sub:"Tozeur",cat:"nature",lt:33.75,lg:8.42,rt:4.5,dur:50,cost:0,hid:false,sn:["automne","hiver","printemps"],cr:.15,d:"Lac salé 5000km2. Mirages.",meal:null},
+  {id:"dar_toz",n:"Dar Tozeur",r:"sud_ouest",sub:"Tozeur",cat:"restaurant",lt:33.92,lg:8.13,rt:4.4,dur:70,cost:25,hid:false,sn:["automne","hiver","printemps"],cr:.25,d:"Couscous berzguen, spécialité locale.",meal:"dinner"},
+  {id:"chebika",n:"Oasis Chebika",r:"sud_ouest",sub:"Nefta & Chebika",cat:"nature",lt:34.32,lg:7.94,rt:4.7,dur:80,cost:0,hid:true,sn:["automne","hiver","printemps"],cr:.20,d:"Cascade cachée dans les gorges.",meal:null},
+  {id:"mides",n:"Canyon Mides",r:"sud_ouest",sub:"Tamerza",cat:"nature",lt:34.38,lg:7.90,rt:4.5,dur:60,cost:0,hid:true,sn:["automne","hiver","printemps"],cr:.10,d:"Gorges vertigineuses.",meal:null},
+  {id:"ong",n:"Ong Jmal Star Wars",r:"sud_ouest",sub:"Nefta & Chebika",cat:"attraction",lt:34.40,lg:7.85,rt:4.2,dur:50,cost:5,hid:true,sn:["automne","hiver","printemps"],cr:.12,d:"Décors Mos Espa dans le sable.",meal:null},
+  {id:"matmata",n:"Matmata Troglodytes",r:"sud_est",sub:"Matmata",cat:"attraction",lt:33.54,lg:9.98,rt:4.4,dur:70,cost:5,hid:false,sn:["automne","hiver","printemps"],cr:.30,d:"Habitations berbères Star Wars.",meal:null},
+  {id:"douz",n:"Douz Sahara",r:"sud_ouest",sub:"Douz",cat:"nature",lt:33.46,lg:8.83,rt:4.3,dur:120,cost:35,hid:false,sn:["automne","hiver"],cr:.28,d:"Porte du Sahara. Dromadaires, dunes.",meal:null},
+  {id:"ksar_o",n:"Ksour Tataouine",r:"sud_est",sub:"Tataouine",cat:"attraction",lt:32.93,lg:10.45,rt:4.4,dur:80,cost:5,hid:true,sn:["automne","hiver","printemps"],cr:.08,d:"Greniers berbères millénaires.",meal:null},
+  {id:"chenini",n:"Village Chenini",r:"sud_est",sub:"Tataouine",cat:"attraction",lt:33.01,lg:10.26,rt:4.5,dur:70,cost:0,hid:true,sn:["automne","hiver","printemps"],cr:.05,d:"Troglodyte perché légendaire.",meal:null},
+  {id:"houmt",n:"Houmt Souk",r:"djerba",sub:"Houmt Souk",cat:"attraction",lt:33.88,lg:10.86,rt:4.3,dur:90,cost:0,hid:false,sn:["printemps","ete","automne","hiver"],cr:.55,d:"Fondouks, marchés berbères.",meal:null},
+  {id:"yedder",n:"Café Ben Yedder",r:"djerba",sub:"Houmt Souk",cat:"cafe",lt:33.88,lg:10.86,rt:4.2,dur:40,cost:8,hid:false,sn:["printemps","ete","automne","hiver"],cr:.40,d:"Ftour, thé vert, pâtisseries.",meal:"breakfast"},
+  {id:"atik",n:"Al Atik",r:"djerba",sub:"Houmt Souk",cat:"restaurant",lt:33.88,lg:10.86,rt:4.4,dur:70,cost:30,hid:false,sn:["printemps","ete","automne","hiver"],cr:.45,d:"Cuisine djerbienne, poisson du jour.",meal:"lunch"},
+  {id:"ghriba",n:"Synagogue Ghriba",r:"djerba",sub:"Erriadh",cat:"attraction",lt:33.81,lg:10.86,rt:4.5,dur:40,cost:0,hid:false,sn:["printemps","automne","hiver"],cr:.40,d:"Plus ancienne synagogue d'Afrique.",meal:null},
+  {id:"djhood",n:"Djerbahood",r:"djerba",sub:"Erriadh",cat:"attraction",lt:33.82,lg:10.86,rt:4.6,dur:70,cost:0,hid:true,sn:["printemps","ete","automne","hiver"],cr:.30,d:"250 fresques street art, 30 pays.",meal:null},
+  {id:"seguia",n:"Plage Seguia",r:"djerba",sub:"Midoun",cat:"beach",lt:33.80,lg:10.96,rt:4.4,dur:100,cost:0,hid:false,sn:["ete","printemps"],cr:.45,d:"Paradis turquoise.",meal:null},
+  {id:"dar_dj",n:"Dar Hassine",r:"djerba",sub:"Midoun",cat:"restaurant",lt:33.80,lg:10.92,rt:4.5,dur:75,cost:35,hid:true,sn:["printemps","ete","automne","hiver"],cr:.25,d:"Table raffinée djerbienne.",meal:"dinner"},
+  {id:"sfax_m",n:"Médina Sfax",r:"sfax",sub:"Sfax Ville",cat:"attraction",lt:34.74,lg:10.76,rt:4.2,dur:70,cost:0,hid:false,sn:["printemps","automne","hiver"],cr:.40,d:"Remparts majestueux, Bab Diwan.",meal:null},
+  {id:"kerk",n:"Îles Kerkennah",r:"sfax",sub:"Kerkennah",cat:"nature",lt:34.70,lg:11.17,rt:4.3,dur:150,cost:3,hid:true,sn:["printemps","ete","automne"],cr:.08,d:"Archipel préservé, pêche.",meal:null},
+  // === EXPANDED DESTINATIONS ===
+  // TUNIS +
+  {id:"cathedrale",n:"Cathédrale St-Vincent",r:"tunis",sub:"Tunis Centre",cat:"attraction",lt:36.80,lg:10.18,rt:4.0,dur:30,cost:0,hid:true,sn:["printemps","ete","automne","hiver"],cr:.20,d:"Architecture néo-romane, vitraux magnifiques.",meal:null},
+  {id:"dar_lasram",n:"Dar Lasram",r:"tunis",sub:"Tunis Centre",cat:"attraction",lt:36.80,lg:10.17,rt:4.3,dur:40,cost:5,hid:true,sn:["printemps","ete","automne","hiver"],cr:.15,d:"Palais beylical XVIIIe, zellige exquis.",meal:null},
+  {id:"dar_hussein",n:"Dar Hussein",r:"tunis",sub:"Tunis Centre",cat:"attraction",lt:36.80,lg:10.17,rt:4.4,dur:45,cost:5,hid:true,sn:["printemps","ete","automne","hiver"],cr:.18,d:"INP, architecture ottomane splendide.",meal:null},
+  {id:"zitouna",n:"Mosquée Zitouna",r:"tunis",sub:"Tunis Centre",cat:"mosque",lt:36.80,lg:10.17,rt:4.6,dur:25,cost:0,hid:false,sn:["printemps","ete","automne","hiver"],cr:.70,d:"Fondée en 732, cœur spirituel de Tunis.",meal:null},
+  {id:"musee_cart",n:"Musée Carthage",r:"tunis",sub:"Carthage & Sidi Bou Saïd",cat:"attraction",lt:36.85,lg:10.32,rt:4.3,dur:50,cost:8,hid:false,sn:["printemps","automne","hiver"],cr:.50,d:"Stèles puniques, sarcophages, bijoux anciens.",meal:null},
+  {id:"thermes",n:"Thermes d'Antonin",r:"tunis",sub:"Carthage & Sidi Bou Saïd",cat:"attraction",lt:36.86,lg:10.33,rt:4.5,dur:50,cost:12,hid:false,sn:["printemps","automne","hiver"],cr:.60,d:"Plus grands thermes romains d'Afrique.",meal:null},
+  {id:"acropolium",n:"Acropolium Carthage",r:"tunis",sub:"Carthage & Sidi Bou Saïd",cat:"attraction",lt:36.85,lg:10.33,rt:4.2,dur:35,cost:5,hid:true,sn:["printemps","ete","automne","hiver"],cr:.25,d:"Ancienne cathédrale, concerts, expo.",meal:null},
+  {id:"gammarth_pl",n:"Plage Gammarth",r:"tunis",sub:"La Marsa & Gammarth",cat:"beach",lt:36.91,lg:10.30,rt:4.1,dur:100,cost:0,hid:false,sn:["ete","printemps"],cr:.55,d:"Plage résidentielle chic, sable fin.",meal:null},
+  {id:"dar_seb",n:"Dar Sebastian",r:"tunis",sub:"La Marsa & Gammarth",cat:"attraction",lt:36.89,lg:10.32,rt:4.0,dur:40,cost:5,hid:true,sn:["printemps","ete","automne"],cr:.08,d:"Villa art-déco, jardin romantique.",meal:null},
+  {id:"cafe_saf",n:"Café Saf Saf",r:"tunis",sub:"La Marsa & Gammarth",cat:"cafe",lt:36.88,lg:10.33,rt:4.3,dur:40,cost:10,hid:false,sn:["printemps","ete","automne","hiver"],cr:.45,d:"Café centenaire sous grand ficus, narguilé.",meal:"breakfast"},
+  // SAHEL +
+  {id:"ribat_s",n:"Ribat Sousse",r:"sahel",sub:"Sousse",cat:"attraction",lt:35.83,lg:10.64,rt:4.4,dur:45,cost:8,hid:false,sn:["printemps","ete","automne","hiver"],cr:.55,d:"Tour de guet VIIIe, vue panoramique.",meal:null},
+  {id:"catacombes",n:"Catacombes Sousse",r:"sahel",sub:"Sousse",cat:"attraction",lt:35.82,lg:10.64,rt:4.1,dur:40,cost:5,hid:true,sn:["printemps","automne","hiver"],cr:.15,d:"Réseau souterrain chrétien, 5km galeries.",meal:null},
+  {id:"boujaafar",n:"Plage Boujaâfar",r:"sahel",sub:"Sousse",cat:"beach",lt:35.83,lg:10.65,rt:4.0,dur:100,cost:0,hid:false,sn:["ete","printemps"],cr:.65,d:"Plage urbaine animée face au Ribat.",meal:null},
+  {id:"musee_s",n:"Musée Archéo Sousse",r:"sahel",sub:"Sousse",cat:"attraction",lt:35.83,lg:10.63,rt:4.2,dur:50,cost:7,hid:true,sn:["printemps","automne","hiver"],cr:.20,d:"Mosaïques romaines exceptionnelles.",meal:null},
+  {id:"habib_r",n:"Restaurant Habib",r:"sahel",sub:"Sousse",cat:"restaurant",lt:35.83,lg:10.64,rt:4.2,dur:65,cost:20,hid:false,sn:["printemps","ete","automne","hiver"],cr:.40,d:"Tajine poisson, spécialités sahéliennes.",meal:"lunch"},
+  {id:"dar_am",n:"Dar Amira",r:"sahel",sub:"Sousse",cat:"restaurant",lt:35.83,lg:10.63,rt:4.5,dur:70,cost:35,hid:true,sn:["printemps","ete","automne","hiver"],cr:.20,d:"Palais restauré, gastronomie fine.",meal:"dinner"},
+  {id:"skanes_pl",n:"Plage Skanes",r:"sahel",sub:"Monastir",cat:"beach",lt:35.77,lg:10.75,rt:4.2,dur:100,cost:0,hid:false,sn:["ete","printemps"],cr:.50,d:"Longue plage de sable fin, eaux calmes.",meal:null},
+  {id:"habib_mus",n:"Musée Habib Bourguiba",r:"sahel",sub:"Monastir",cat:"attraction",lt:35.78,lg:10.83,rt:4.0,dur:40,cost:5,hid:false,sn:["printemps","ete","automne","hiver"],cr:.35,d:"Vie du père de la nation.",meal:null},
+  {id:"mahdia_med",n:"Médina Mahdia",r:"sahel",sub:"Mahdia",cat:"attraction",lt:35.50,lg:11.04,rt:4.3,dur:70,cost:0,hid:false,sn:["printemps","automne","hiver"],cr:.30,d:"Skifa Kahla, tisserands soie.",meal:null},
+  {id:"mahdia_pl",n:"Plage Mahdia",r:"sahel",sub:"Mahdia",cat:"beach",lt:35.50,lg:11.06,rt:4.5,dur:100,cost:0,hid:false,sn:["ete","printemps"],cr:.35,d:"Sable blanc fin, mer transparente.",meal:null},
+  {id:"borj_m",n:"Borj El Kebir",r:"sahel",sub:"Mahdia",cat:"attraction",lt:35.51,lg:11.06,rt:4.1,dur:35,cost:5,hid:true,sn:["printemps","automne","hiver"],cr:.15,d:"Fort fatimide XVI, vue cap Afrique.",meal:null},
+  {id:"port_mahdia",n:"Port de Mahdia",r:"sahel",sub:"Mahdia",cat:"attraction",lt:35.50,lg:11.05,rt:4.2,dur:30,cost:0,hid:false,sn:["printemps","ete","automne","hiver"],cr:.25,d:"Port coloré, barques bleues, pêcheurs.",meal:null},
+  // NORD-OUEST +
+  {id:"corail",n:"Côte de Corail",r:"nord_ouest",sub:"Tabarka",cat:"nature",lt:36.95,lg:8.78,rt:4.5,dur:80,cost:0,hid:false,sn:["ete","printemps"],cr:.20,d:"Fonds marins, plongée, roches rouges.",meal:null},
+  {id:"pl_tabarka",n:"Plage Tabarka",r:"nord_ouest",sub:"Tabarka",cat:"beach",lt:36.96,lg:8.74,rt:4.3,dur:100,cost:0,hid:false,sn:["ete","printemps"],cr:.25,d:"Sable fin, Aiguilles rocheuses en fond.",meal:null},
+  {id:"foret_bou",n:"Forêt Boukornine",r:"nord_ouest",sub:"Aïn Draham",cat:"nature",lt:36.78,lg:8.70,rt:4.2,dur:70,cost:0,hid:true,sn:["printemps","ete","automne"],cr:.05,d:"Randonnée en forêt de chênes-lièges.",meal:null},
+  {id:"hammam_b",n:"Hammam Bourguiba",r:"nord_ouest",sub:"Aïn Draham",cat:"nature",lt:36.80,lg:8.73,rt:4.0,dur:60,cost:10,hid:true,sn:["printemps","automne","hiver"],cr:.08,d:"Sources thermales naturelles en forêt.",meal:null},
+  {id:"chimtou",n:"Chimtou",r:"nord_ouest",sub:"Bulla Regia",cat:"attraction",lt:36.49,lg:8.58,rt:4.1,dur:60,cost:5,hid:true,sn:["printemps","automne"],cr:.05,d:"Carrières marbre numide, musée.",meal:null},
+  // NORD-EST +
+  {id:"fort_biz",n:"Fort d'Espagne",r:"nord_est",sub:"Bizerte",cat:"attraction",lt:37.28,lg:9.87,rt:4.1,dur:40,cost:3,hid:false,sn:["printemps","ete","automne"],cr:.25,d:"Fort ottoman, vue panoramique port.",meal:null},
+  {id:"kasbah_biz",n:"Kasbah Bizerte",r:"nord_est",sub:"Bizerte",cat:"attraction",lt:37.27,lg:9.87,rt:4.0,dur:35,cost:0,hid:false,sn:["printemps","ete","automne","hiver"],cr:.30,d:"Quartier historique, ruelles colorées.",meal:null},
+  {id:"cafe_biz2",n:"Café du Port",r:"nord_est",sub:"Bizerte",cat:"cafe",lt:37.27,lg:9.87,rt:4.1,dur:35,cost:8,hid:false,sn:["printemps","ete","automne"],cr:.30,d:"Vue vieux port, café turc.",meal:"breakfast"},
+  {id:"resto_biz",n:"Le Phénicien",r:"nord_est",sub:"Bizerte",cat:"restaurant",lt:37.28,lg:9.88,rt:4.3,dur:70,cost:30,hid:false,sn:["printemps","ete","automne","hiver"],cr:.25,d:"Fruits de mer, terrasse sur le port.",meal:"dinner"},
+  {id:"corniche_biz",n:"Corniche Bizerte",r:"nord_est",sub:"Bizerte",cat:"nature",lt:37.28,lg:9.85,rt:4.0,dur:50,cost:0,hid:false,sn:["printemps","ete","automne"],cr:.30,d:"Promenade littorale, coucher soleil.",meal:null},
+  // CENTRE +
+  {id:"kef",n:"Kasbah Le Kef",r:"nord_ouest",sub:"Le Kef",cat:"attraction",lt:36.18,lg:8.71,rt:4.3,dur:60,cost:3,hid:true,sn:["printemps","automne"],cr:.08,d:"Citadelle ottomane, vue 360° vallée.",meal:null},
+  {id:"basilique",n:"Basilique Le Kef",r:"nord_ouest",sub:"Le Kef",cat:"attraction",lt:36.17,lg:8.71,rt:4.0,dur:30,cost:0,hid:true,sn:["printemps","automne","hiver"],cr:.05,d:"Paléochrétienne IVe, une des plus anciennes.",meal:null},
+  {id:"table_jug",n:"Table de Jugurtha",r:"nord_ouest",sub:"Le Kef",cat:"nature",lt:36.14,lg:8.37,rt:4.6,dur:90,cost:5,hid:true,sn:["printemps","automne"],cr:.03,d:"Mesa spectaculaire, forteresse naturelle.",meal:null},
+  {id:"cafe_kef",n:"Café Andalous Le Kef",r:"nord_ouest",sub:"Le Kef",cat:"cafe",lt:36.17,lg:8.71,rt:4.0,dur:30,cost:6,hid:true,sn:["printemps","ete","automne","hiver"],cr:.05,d:"Plus vieux café du Kef, vue médina.",meal:"breakfast"},
+  // CAP BON +
+  {id:"fort_kel",n:"Fort Kélibia",r:"cap_bon",sub:"Kélibia",cat:"attraction",lt:36.85,lg:11.10,rt:4.3,dur:50,cost:5,hid:false,sn:["printemps","ete","automne"],cr:.30,d:"Plus grand fort byzantin, vue 360°.",meal:null},
+  {id:"korbous",n:"Korbous Thermes",r:"cap_bon",sub:"Korbus",cat:"nature",lt:36.82,lg:10.57,rt:4.1,dur:70,cost:10,hid:true,sn:["printemps","automne","hiver"],cr:.10,d:"Sources thermales chaudes, falaises.",meal:null},
+  {id:"haouaria",n:"Grottes El Haouaria",r:"cap_bon",sub:"El Haouaria",cat:"nature",lt:37.05,lg:11.01,rt:4.2,dur:50,cost:3,hid:true,sn:["printemps","ete","automne"],cr:.10,d:"Carrières romaines, fauconnerie.",meal:null},
+  {id:"yasmine_h",n:"Yasmine Hammamet",r:"cap_bon",sub:"Hammamet",cat:"attraction",lt:36.38,lg:10.55,rt:4.0,dur:80,cost:0,hid:false,sn:["printemps","ete","automne","hiver"],cr:.60,d:"Marina, restos, souk reconstitué.",meal:null},
+  {id:"cafe_kel",n:"Café El Mansourah",r:"cap_bon",sub:"Kélibia",cat:"cafe",lt:36.84,lg:11.09,rt:4.2,dur:35,cost:8,hid:false,sn:["printemps","ete","automne"],cr:.15,d:"Vue falaises, thé au soleil.",meal:"breakfast"},
+  {id:"dar_kel",n:"Le Pêcheur Kélibia",r:"cap_bon",sub:"Kélibia",cat:"restaurant",lt:36.85,lg:11.10,rt:4.4,dur:70,cost:30,hid:false,sn:["printemps","ete","automne"],cr:.20,d:"Poisson fraîchement pêché, terrasse mer.",meal:"dinner"},
+  // KAIROUAN +
+  {id:"k_med_souk",n:"Souk Médina Kairouan",r:"centre",sub:"Kairouan",cat:"attraction",lt:35.68,lg:10.10,rt:4.2,dur:60,cost:0,hid:false,sn:["printemps","automne","hiver"],cr:.45,d:"Tapis, cuir, makroudh artisanaux.",meal:null},
+  {id:"sidi_sahbi",n:"Mosquée Sidi Sahbi",r:"centre",sub:"Kairouan",cat:"mosque",lt:35.67,lg:10.09,rt:4.4,dur:30,cost:0,hid:false,sn:["printemps","ete","automne","hiver"],cr:.35,d:"Mosquée du Barbier, faïences turques.",meal:null},
+  {id:"bir_b",n:"Bassins Aghlabides",r:"centre",sub:"Kairouan",cat:"attraction",lt:35.68,lg:10.11,rt:4.1,dur:25,cost:3,hid:false,sn:["printemps","automne","hiver"],cr:.25,d:"Génie hydraulique IXe siècle.",meal:null},
+  {id:"cafe_kairouan",n:"Café El Amir",r:"centre",sub:"Kairouan",cat:"cafe",lt:35.68,lg:10.10,rt:4.0,dur:30,cost:6,hid:false,sn:["printemps","ete","automne","hiver"],cr:.30,d:"Makroudh frais, thé devant médina.",meal:"breakfast"},
+  {id:"resto_kairouan",n:"El Barrouta",r:"centre",sub:"Kairouan",cat:"restaurant",lt:35.68,lg:10.10,rt:4.2,dur:65,cost:22,hid:false,sn:["printemps","ete","automne","hiver"],cr:.30,d:"Couscous bel kaddid, agneau local.",meal:"lunch"},
+  // SUD-OUEST +
+  {id:"nefta",n:"Corbeille Nefta",r:"sud_ouest",sub:"Nefta & Chebika",cat:"nature",lt:33.87,lg:7.88,rt:4.3,dur:50,cost:0,hid:false,sn:["automne","hiver","printemps"],cr:.12,d:"Oasis en cuvette, 152 sources.",meal:null},
+  {id:"tamerza_pal",n:"Cascades Tamerza",r:"sud_ouest",sub:"Tamerza",cat:"nature",lt:34.38,lg:7.95,rt:4.4,dur:60,cost:0,hid:false,sn:["automne","hiver","printemps"],cr:.12,d:"Oasis de montagne, cascades cachées.",meal:null},
+  {id:"tozeur_zoo",n:"Eden Palm Tozeur",r:"sud_ouest",sub:"Tozeur",cat:"nature",lt:33.93,lg:8.10,rt:4.0,dur:50,cost:8,hid:false,sn:["automne","hiver","printemps"],cr:.15,d:"Parc éco, faune saharienne.",meal:null},
+  {id:"cafe_toz",n:"Café Bir Barrouta",r:"sud_ouest",sub:"Tozeur",cat:"cafe",lt:33.92,lg:8.13,rt:4.1,dur:30,cost:5,hid:false,sn:["automne","hiver","printemps"],cr:.15,d:"Puits ancestral, dromadaire actionne la pompe.",meal:"breakfast"},
+  // SUD-EST +
+  {id:"guerm",n:"Guermessa",r:"sud_est",sub:"Tataouine",cat:"attraction",lt:32.99,lg:10.37,rt:4.3,dur:60,cost:0,hid:true,sn:["automne","hiver","printemps"],cr:.03,d:"Village perché abandonné, vue saisissante.",meal:null},
+  {id:"ksar_h",n:"Ksar Haddada",r:"sud_est",sub:"Tataouine",cat:"attraction",lt:33.16,lg:10.34,rt:4.2,dur:45,cost:3,hid:true,sn:["automne","hiver","printemps"],cr:.05,d:"Lieu de tournage Star Wars, hôtel insolite.",meal:null},
+  {id:"cafe_douz",n:"Café des Dunes",r:"sud_ouest",sub:"Douz",cat:"cafe",lt:33.46,lg:8.83,rt:4.0,dur:35,cost:6,hid:false,sn:["automne","hiver"],cr:.15,d:"Thé bédouin face au désert.",meal:"breakfast"},
+  {id:"dar_mat",n:"Dar Troglodyte",r:"sud_est",sub:"Matmata",cat:"restaurant",lt:33.54,lg:9.98,rt:4.2,dur:65,cost:20,hid:false,sn:["automne","hiver","printemps"],cr:.20,d:"Repas berbère dans maison souterraine.",meal:"lunch"},
+  // DJERBA +
+  {id:"borj_dj",n:"Borj El Kebir Djerba",r:"djerba",sub:"Houmt Souk",cat:"attraction",lt:33.88,lg:10.85,rt:4.1,dur:35,cost:5,hid:false,sn:["printemps","ete","automne","hiver"],cr:.30,d:"Fort espagnol XVe, tour des crânes.",meal:null},
+  {id:"flamant",n:"Plage des Flamants",r:"djerba",sub:"Midoun",cat:"beach",lt:33.82,lg:11.00,rt:4.6,dur:100,cost:0,hid:false,sn:["ete","printemps"],cr:.20,d:"Flamants roses, lagune turquoise.",meal:null},
+  {id:"musee_dj",n:"Musée Guellala",r:"djerba",sub:"Erriadh",cat:"attraction",lt:33.75,lg:10.85,rt:4.0,dur:45,cost:7,hid:true,sn:["printemps","ete","automne","hiver"],cr:.15,d:"Traditions djerbiennes, poterie millénaire.",meal:null},
+  {id:"crocodile",n:"Ferme Crocodiles",r:"djerba",sub:"Midoun",cat:"nature",lt:33.80,lg:10.93,rt:4.1,dur:50,cost:15,hid:false,sn:["printemps","ete","automne","hiver"],cr:.40,d:"400 crocodiles du Nil, jardin tropical.",meal:null},
+  {id:"cafe_erriadh",n:"Café Fatma",r:"djerba",sub:"Erriadh",cat:"cafe",lt:33.82,lg:10.86,rt:4.2,dur:35,cost:8,hid:true,sn:["printemps","ete","automne","hiver"],cr:.10,d:"Café au milieu des fresques, homemade.",meal:"breakfast"},
+  // SFAX +
+  {id:"sfax_dar",n:"Dar Jellouli",r:"sfax",sub:"Sfax Ville",cat:"attraction",lt:34.74,lg:10.76,rt:4.1,dur:40,cost:5,hid:true,sn:["printemps","automne","hiver"],cr:.15,d:"Musée arts et traditions dans palais XVIIe.",meal:null},
+  {id:"sfax_bab",n:"Bab Diwan",r:"sfax",sub:"Sfax Ville",cat:"attraction",lt:34.74,lg:10.76,rt:4.0,dur:20,cost:0,hid:false,sn:["printemps","ete","automne","hiver"],cr:.35,d:"Porte monumentale, entrée médina.",meal:null},
+  {id:"cafe_sfax",n:"Café El Diwan",r:"sfax",sub:"Sfax Ville",cat:"cafe",lt:34.74,lg:10.76,rt:4.0,dur:30,cost:6,hid:false,sn:["printemps","ete","automne","hiver"],cr:.25,d:"Face aux remparts, ambiance locale.",meal:"breakfast"},
+  {id:"resto_sfax",n:"Chez Abid",r:"sfax",sub:"Sfax Ville",cat:"restaurant",lt:34.74,lg:10.77,rt:4.3,dur:65,cost:20,hid:false,sn:["printemps","ete","automne","hiver"],cr:.30,d:"Meilleur poisson grillé de Sfax.",meal:"lunch"},
+  // === MORE EXPANDED DESTINATIONS V10 ===
+  // TUNIS ++
+  {id:"souk_att",n:"Souk El Attarine",r:"tunis",sub:"Tunis Centre",cat:"attraction",lt:36.80,lg:10.17,rt:4.3,dur:40,cost:0,hid:false,sn:["printemps","ete","automne","hiver"],cr:.55,d:"Souk des parfumeurs, essences et épices rares.",meal:null},
+  {id:"tourbet",n:"Tourbet El Bey",r:"tunis",sub:"Tunis Centre",cat:"attraction",lt:36.80,lg:10.17,rt:4.2,dur:35,cost:5,hid:true,sn:["printemps","automne","hiver"],cr:.12,d:"Mausolée royal husseinite, marbre et faïences.",meal:null},
+  {id:"dar_bach",n:"Dar Bach Hamba",r:"tunis",sub:"Tunis Centre",cat:"attraction",lt:36.80,lg:10.17,rt:4.1,dur:30,cost:3,hid:true,sn:["printemps","ete","automne","hiver"],cr:.08,d:"Palais historique, expositions temporaires.",meal:null},
+  {id:"resto_marsa",n:"Le Golfe La Marsa",r:"tunis",sub:"La Marsa & Gammarth",cat:"restaurant",lt:36.88,lg:10.33,rt:4.4,dur:70,cost:45,hid:false,sn:["printemps","ete","automne","hiver"],cr:.35,d:"Terrasse mer, fruits de mer premium.",meal:"dinner"},
+  // SAHEL ++
+  {id:"musee_sousse2",n:"Musée Dar Essid",r:"sahel",sub:"Sousse",cat:"attraction",lt:35.83,lg:10.63,rt:4.3,dur:40,cost:5,hid:true,sn:["printemps","automne","hiver"],cr:.12,d:"Maison X siècle, mobilier ancien, vue médina.",meal:null},
+  {id:"souk_jem",n:"Souk El Jem",r:"centre",sub:"El Jem",cat:"attraction",lt:35.30,lg:10.71,rt:4.0,dur:30,cost:0,hid:false,sn:["printemps","automne","hiver"],cr:.35,d:"Olives, tapis, artisanat berbère.",meal:null},
+  {id:"cafe_eljem",n:"Café du Colisée",r:"centre",sub:"El Jem",cat:"cafe",lt:35.30,lg:10.71,rt:4.1,dur:30,cost:6,hid:false,sn:["printemps","ete","automne","hiver"],cr:.30,d:"Vue directe amphithéâtre, jus frais.",meal:"breakfast"},
+  {id:"resto_monastir",n:"Le Pirate Monastir",r:"sahel",sub:"Monastir",cat:"restaurant",lt:35.78,lg:10.83,rt:4.2,dur:65,cost:28,hid:false,sn:["printemps","ete","automne","hiver"],cr:.35,d:"Poisson grillé, terrasse port.",meal:"dinner"},
+  {id:"monastir_corniche",n:"Corniche Monastir",r:"sahel",sub:"Monastir",cat:"nature",lt:35.77,lg:10.83,rt:4.0,dur:40,cost:0,hid:false,sn:["printemps","ete","automne"],cr:.40,d:"Promenade littorale, falaise et mer.",meal:null},
+  // CAP BON ++
+  {id:"pl_hammamet",n:"Plage Hammamet",r:"cap_bon",sub:"Hammamet",cat:"beach",lt:36.40,lg:10.62,rt:4.3,dur:100,cost:0,hid:false,sn:["ete","printemps"],cr:.60,d:"Sable doré, eaux calmes, animée.",meal:null},
+  {id:"medina_ham",n:"Médina Hammamet",r:"cap_bon",sub:"Hammamet",cat:"attraction",lt:36.40,lg:10.61,rt:4.2,dur:50,cost:0,hid:false,sn:["printemps","ete","automne","hiver"],cr:.55,d:"Remparts face mer, ruelles fleuries.",meal:null},
+  {id:"george_seb",n:"Villa George Sebastian",r:"cap_bon",sub:"Hammamet",cat:"attraction",lt:36.39,lg:10.62,rt:4.1,dur:40,cost:5,hid:true,sn:["printemps","ete","automne"],cr:.15,d:"Villa Art Déco 1920, jardins exotiques.",meal:null},
+  {id:"resto_ham",n:"La Bella Marina",r:"cap_bon",sub:"Hammamet",cat:"restaurant",lt:36.40,lg:10.61,rt:4.3,dur:65,cost:35,hid:false,sn:["printemps","ete","automne","hiver"],cr:.30,d:"Pasta fruits de mer, vue Yasmine.",meal:"lunch"},
+  {id:"cafe_ham",n:"Café Sidi Bouhdid",r:"cap_bon",sub:"Hammamet",cat:"cafe",lt:36.40,lg:10.61,rt:4.2,dur:35,cost:8,hid:false,sn:["printemps","ete","automne","hiver"],cr:.40,d:"Terrasse médina, vue golfe, thé menthe.",meal:"breakfast"},
+  {id:"pl_nabeul",n:"Plage Nabeul",r:"cap_bon",sub:"Nabeul",cat:"beach",lt:36.45,lg:10.75,rt:4.0,dur:90,cost:0,hid:false,sn:["ete","printemps"],cr:.35,d:"Plage familiale calme, peu touristique.",meal:null},
+  // NORD-OUEST ++
+  {id:"aig_tab",n:"Aiguilles Tabarka",r:"nord_ouest",sub:"Tabarka",cat:"nature",lt:36.96,lg:8.76,rt:4.4,dur:40,cost:0,hid:false,sn:["printemps","ete","automne"],cr:.20,d:"Formations rocheuses spectaculaires en mer.",meal:null},
+  {id:"cafe_tab",n:"Café du Port Tabarka",r:"nord_ouest",sub:"Tabarka",cat:"cafe",lt:36.95,lg:8.76,rt:4.0,dur:30,cost:7,hid:false,sn:["printemps","ete","automne"],cr:.15,d:"Café face au fort, croissants frais.",meal:"breakfast"},
+  {id:"resto_ain",n:"Chez Saïd",r:"nord_ouest",sub:"Aïn Draham",cat:"restaurant",lt:36.78,lg:8.68,rt:4.1,dur:60,cost:22,hid:true,sn:["printemps","ete","automne","hiver"],cr:.08,d:"Sanglier braisé, cuisine de montagne.",meal:"dinner"},
+  // NORD-EST ++
+  {id:"lac_biz",n:"Lac de Bizerte",r:"nord_est",sub:"Bizerte",cat:"nature",lt:37.24,lg:9.86,rt:4.0,dur:45,cost:0,hid:false,sn:["printemps","ete","automne"],cr:.20,d:"Promenade lac, pont mobile, pêcheurs.",meal:null},
+  {id:"medina_biz",n:"Médina Bizerte",r:"nord_est",sub:"Bizerte",cat:"attraction",lt:37.27,lg:9.87,rt:4.1,dur:50,cost:0,hid:false,sn:["printemps","ete","automne","hiver"],cr:.25,d:"Ruelles andalouses, mosquées, zaouïas.",meal:null},
+  // KAIROUAN ++
+  {id:"k_tapis",n:"Atelier Tapis Kairouan",r:"centre",sub:"Kairouan",cat:"attraction",lt:35.68,lg:10.10,rt:4.2,dur:45,cost:0,hid:false,sn:["printemps","ete","automne","hiver"],cr:.30,d:"Démonstration tissage, noeuds persans.",meal:null},
+  {id:"k_makroudh",n:"Pâtisserie El Amir",r:"centre",sub:"Kairouan",cat:"cafe",lt:35.68,lg:10.10,rt:4.3,dur:25,cost:4,hid:false,sn:["printemps","ete","automne","hiver"],cr:.50,d:"Meilleur makroudh de Tunisie.",meal:"breakfast"},
+  {id:"k_resto",n:"Dar El Bey Kairouan",r:"centre",sub:"Kairouan",cat:"restaurant",lt:35.68,lg:10.10,rt:4.2,dur:65,cost:25,hid:true,sn:["printemps","ete","automne","hiver"],cr:.15,d:"Riad restauré, tagine agneau aux pruneaux.",meal:"dinner"},
+  // SUD-OUEST ++
+  {id:"medina_toz",n:"Médina Tozeur",r:"sud_ouest",sub:"Tozeur",cat:"attraction",lt:33.92,lg:8.13,rt:4.3,dur:50,cost:0,hid:false,sn:["automne","hiver","printemps"],cr:.20,d:"Briques Ouled Hadef, architecture unique.",meal:null},
+  {id:"musee_dar",n:"Musée Dar Charaït",r:"sud_ouest",sub:"Tozeur",cat:"attraction",lt:33.92,lg:8.12,rt:4.1,dur:40,cost:7,hid:false,sn:["automne","hiver","printemps"],cr:.12,d:"Traditions oasiennes, costumes anciens.",meal:null},
+  {id:"nefta_mosque",n:"Mosquée Nefta",r:"sud_ouest",sub:"Nefta & Chebika",cat:"mosque",lt:33.87,lg:7.88,rt:4.0,dur:25,cost:0,hid:true,sn:["automne","hiver","printemps"],cr:.05,d:"Coupoles blanches au-dessus de la corbeille.",meal:null},
+  // SUD-EST ++
+  {id:"douz_souk",n:"Souk de Douz",r:"sud_ouest",sub:"Douz",cat:"attraction",lt:33.46,lg:8.83,rt:4.0,dur:40,cost:0,hid:false,sn:["automne","hiver"],cr:.20,d:"Marché du jeudi, dattes, artisanat nomade.",meal:null},
+  {id:"ksar_ghilane",n:"Ksar Ghilane",r:"sud_ouest",sub:"Douz",cat:"nature",lt:33.49,lg:8.44,rt:4.5,dur:180,cost:50,hid:true,sn:["automne","hiver"],cr:.05,d:"Oasis saharienne, sources chaudes, bivouac.",meal:null},
+  {id:"resto_tat",n:"Dar Tataouine",r:"sud_est",sub:"Tataouine",cat:"restaurant",lt:32.93,lg:10.45,rt:4.1,dur:60,cost:18,hid:true,sn:["automne","hiver","printemps"],cr:.05,d:"Cuisine berbère, brik dannouni.",meal:"lunch"},
+  // DJERBA ++
+  {id:"phare_dj",n:"Phare Taguermess",r:"djerba",sub:"Midoun",cat:"attraction",lt:33.84,lg:11.01,rt:4.0,dur:30,cost:0,hid:true,sn:["printemps","ete","automne","hiver"],cr:.10,d:"Plus ancien phare de Tunisie, panorama 360°.",meal:null},
+  {id:"lella_hadj",n:"Plage Lella Hadhria",r:"djerba",sub:"Midoun",cat:"beach",lt:33.80,lg:10.98,rt:4.3,dur:100,cost:0,hid:false,sn:["ete","printemps"],cr:.30,d:"Longue plage de sable blanc, clubs.",meal:null},
+  {id:"ajim",n:"Port Ajim",r:"djerba",sub:"Houmt Souk",cat:"attraction",lt:33.73,lg:10.75,rt:3.9,dur:35,cost:0,hid:true,sn:["printemps","ete","automne","hiver"],cr:.08,d:"Port cantina Star Wars, pêche éponge.",meal:null},
+  {id:"dar_dj2",n:"Restaurant Haroun",r:"djerba",sub:"Houmt Souk",cat:"restaurant",lt:33.88,lg:10.86,rt:4.3,dur:65,cost:28,hid:false,sn:["printemps","ete","automne","hiver"],cr:.30,d:"Terrasse fondouk, couscous au poulpe.",meal:"dinner"},
+  // SFAX ++
+  {id:"sfax_olives",n:"Musée de l'Olive Sfax",r:"sfax",sub:"Sfax Ville",cat:"attraction",lt:34.74,lg:10.75,rt:3.9,dur:35,cost:3,hid:true,sn:["printemps","automne","hiver"],cr:.08,d:"Histoire oléicole, pressoirs anciens.",meal:null},
+  {id:"kerk_pl",n:"Plage Kerkennah",r:"sfax",sub:"Kerkennah",cat:"beach",lt:34.70,lg:11.18,rt:4.1,dur:100,cost:0,hid:false,sn:["ete","printemps"],cr:.08,d:"Plage préservée, charfia pêche ancestrale.",meal:null},
+  {id:"resto_kerk",n:"Le Pêcheur Kerkennah",r:"sfax",sub:"Kerkennah",cat:"restaurant",lt:34.70,lg:11.17,rt:4.2,dur:60,cost:18,hid:true,sn:["printemps","ete","automne"],cr:.05,d:"Poisson du jour, octopus grillé.",meal:"lunch"},
+  // BEACH CLUBS
+  {id:"ghar",n:"Ghar Melh Beach",r:"nord_est",sub:"Bizerte",cat:"beach",lt:37.17,lg:10.19,rt:4.4,dur:120,cost:15,hid:false,sn:["ete"],cr:.35,d:"Plage sauvage, lagune préservée.",meal:null},
+  {id:"rafraf",n:"Rafraf Beach",r:"nord_est",sub:"Bizerte",cat:"beach",lt:37.19,lg:10.18,rt:4.5,dur:120,cost:0,hid:false,sn:["ete"],cr:.40,d:"Plus belle plage du Nord, eaux cristallines.",meal:null},
+  {id:"capang",n:"Cap Angela",r:"nord_est",sub:"Bizerte",cat:"beach",lt:37.34,lg:9.75,rt:4.3,dur:90,cost:0,hid:true,sn:["ete","printemps"],cr:.08,d:"Point le plus au Nord d'Afrique.",meal:null},
+  {id:"coco",n:"Coco Beach Bizerte",r:"nord_est",sub:"Bizerte",cat:"beach",lt:37.28,lg:9.88,rt:4.2,dur:120,cost:25,hid:false,sn:["ete"],cr:.50,d:"Beach club, ambiance festive.",meal:null},
+  {id:"tabsus",n:"Tabsus Beach Club",r:"sahel",sub:"Mahdia",cat:"beach",lt:35.50,lg:11.06,rt:4.3,dur:120,cost:20,hid:false,sn:["ete"],cr:.30,d:"Beach club branché face mer.",meal:null},
+  {id:"hamra",n:"El Hamra Beach",r:"sahel",sub:"Mahdia",cat:"beach",lt:35.52,lg:11.04,rt:4.1,dur:100,cost:10,hid:true,sn:["ete"],cr:.20,d:"Plage dorée, ambiance locale.",meal:null},
+  {id:"pparis",n:"Petit Paris",r:"cap_bon",sub:"Kélibia",cat:"beach",lt:36.85,lg:11.10,rt:4.4,dur:120,cost:20,hid:false,sn:["ete"],cr:.35,d:"Beach club chic, DJ sets.",meal:null},
+  {id:"mansoura",n:"Mansoura Beach",r:"cap_bon",sub:"Kélibia",cat:"beach",lt:36.83,lg:11.08,rt:4.5,dur:100,cost:0,hid:false,sn:["ete","printemps"],cr:.25,d:"Eau turquoise, falaises impressionnantes.",meal:null},
+  {id:"elbelge",n:"El Belge Beach",r:"cap_bon",sub:"Kélibia",cat:"beach",lt:36.84,lg:11.09,rt:4.2,dur:100,cost:10,hid:true,sn:["ete"],cr:.15,d:"Crique secrète, snorkeling.",meal:null},
+  // 5-STAR HOTELS
+  {id:"h_cigale",n:"La Cigale Tabarka",r:"nord_ouest",sub:"Tabarka",cat:"hotel",lt:36.96,lg:8.74,rt:4.7,dur:0,cost:350,hid:false,sn:["printemps","ete","automne","hiver"],cr:.20,d:"5★ Resort & spa, golf, plage privée.",meal:null},
+  {id:"h_marriott",n:"Tunis Marriott",r:"tunis",sub:"La Marsa & Gammarth",cat:"hotel",lt:36.90,lg:10.30,rt:4.6,dur:0,cost:380,hid:false,sn:["printemps","ete","automne","hiver"],cr:.25,d:"5★ Vue mer Gammarth, spa, piscine.",meal:null},
+  {id:"h_four",n:"Four Seasons Tunis",r:"tunis",sub:"La Marsa & Gammarth",cat:"hotel",lt:36.91,lg:10.29,rt:4.9,dur:0,cost:650,hid:false,sn:["printemps","ete","automne","hiver"],cr:.15,d:"5★ Luxe absolu, plage privée, 3 restaurants.",meal:null},
+  {id:"h_radisson",n:"Radisson Blu Hammamet",r:"cap_bon",sub:"Hammamet",cat:"hotel",lt:36.40,lg:10.60,rt:4.4,dur:0,cost:280,hid:false,sn:["printemps","ete","automne","hiver"],cr:.30,d:"5★ Face mer, thalasso, all inclusive.",meal:null},
+  {id:"h_regency",n:"Regency Tunis",r:"tunis",sub:"La Marsa & Gammarth",cat:"hotel",lt:36.89,lg:10.30,rt:4.5,dur:0,cost:300,hid:false,sn:["printemps","ete","automne","hiver"],cr:.20,d:"5★ Gammarth, piscine panoramique.",meal:null},
+  {id:"h_moven",n:"Mövenpick Sousse",r:"sahel",sub:"Sousse",cat:"hotel",lt:35.84,lg:10.58,rt:4.5,dur:0,cost:320,hid:false,sn:["printemps","ete","automne","hiver"],cr:.25,d:"5★ Resort, spa, parc aquatique.",meal:null},
+  {id:"h_anant",n:"Anantara Tozeur",r:"sud_ouest",sub:"Tozeur",cat:"hotel",lt:33.93,lg:8.12,rt:4.8,dur:0,cost:500,hid:false,sn:["automne","hiver","printemps"],cr:.10,d:"5★ Luxe oasis, vue palmeraie et désert.",meal:null},
+  {id:"h_mouradi",n:"Mouradi Djerba",r:"djerba",sub:"Midoun",cat:"hotel",lt:33.79,lg:10.95,rt:4.3,dur:0,cost:250,hid:false,sn:["printemps","ete","automne","hiver"],cr:.35,d:"5★ Plage privée, all inclusive.",meal:null},
+  {id:"h_royal",n:"Royal Tulip Hammamet",r:"cap_bon",sub:"Hammamet",cat:"hotel",lt:36.41,lg:10.59,rt:4.4,dur:0,cost:260,hid:false,sn:["printemps","ete","automne","hiver"],cr:.20,d:"5★ Yasmine, thalasso, 4 piscines.",meal:null},
+
+  // MORE SAHEL
+  {id:"s_kantaoui_m",n:"Marina Kantaoui",r:"sahel",sub:"Sousse",cat:"attraction",lt:35.89,lg:10.60,rt:4.2,dur:60,cost:0,hid:false,sn:["printemps","ete","automne"],cr:.55,d:"Marina luxe, bateaux, shopping bord de mer.",meal:null},
+  {id:"s_remada",n:"Remada Palace",r:"sahel",sub:"Sousse",cat:"restaurant",lt:35.84,lg:10.63,rt:4.3,dur:70,cost:30,hid:false,sn:["printemps","ete","automne","hiver"],cr:.35,d:"Gastronomie tuniso-italienne, terrasse mer.",meal:"dinner"},
+  {id:"s_mahdiafort",n:"Fort Mahdia",r:"sahel",sub:"Mahdia",cat:"attraction",lt:35.51,lg:11.07,rt:4.2,dur:40,cost:3,hid:false,sn:["printemps","automne","hiver"],cr:.20,d:"Phare et fortifications face Méditerranée.",meal:null},
+  {id:"s_eljem_mus",n:"Musée El Jem",r:"centre",sub:"El Jem",cat:"attraction",lt:35.30,lg:10.71,rt:4.3,dur:40,cost:8,hid:true,sn:["printemps","automne","hiver"],cr:.30,d:"Mosaïques uniques, villas romaines.",meal:null},
+  // MORE TUNIS
+  {id:"t_tophet",n:"Tophet Carthage",r:"tunis",sub:"Carthage & Sidi Bou Saïd",cat:"attraction",lt:36.84,lg:10.32,rt:4.1,dur:35,cost:5,hid:true,sn:["printemps","automne","hiver"],cr:.25,d:"Sanctuaire punique, stèles votives.",meal:null},
+  {id:"t_palais",n:"Palais Ennejma Ezzahra",r:"tunis",sub:"Carthage & Sidi Bou Saïd",cat:"attraction",lt:36.87,lg:10.34,rt:4.4,dur:50,cost:5,hid:true,sn:["printemps","ete","automne","hiver"],cr:.20,d:"Palais baron d'Erlanger, musique arabe.",meal:null},
+  {id:"t_medina_r",n:"Resto Dar Slah",r:"tunis",sub:"Tunis Centre",cat:"restaurant",lt:36.80,lg:10.17,rt:4.3,dur:70,cost:28,hid:true,sn:["printemps","ete","automne","hiver"],cr:.15,d:"Kamounia, tajine, cuisine tunisoise authentique.",meal:"lunch"},
+  {id:"t_tgm",n:"Balade TGM Banlieue",r:"tunis",sub:"La Marsa & Gammarth",cat:"nature",lt:36.88,lg:10.31,rt:4.0,dur:40,cost:1,hid:true,sn:["printemps","ete","automne"],cr:.20,d:"Train pittoresque longeant la mer.",meal:null},
+  // MORE CAP BON
+  {id:"cb_dar_chic",n:"Dar Chichone",r:"cap_bon",sub:"Nabeul",cat:"restaurant",lt:36.45,lg:10.73,rt:4.4,dur:70,cost:35,hid:false,sn:["printemps","ete","automne","hiver"],cr:.25,d:"Gastronomie capbonnaise, brick tunisien.",meal:"dinner"},
+  {id:"cb_plage_h",n:"Plage Hammamet",r:"cap_bon",sub:"Hammamet",cat:"beach",lt:36.40,lg:10.62,rt:4.3,dur:100,cost:0,hid:false,sn:["ete","printemps"],cr:.60,d:"Plage mythique de sable doré.",meal:null},
+  {id:"cb_medina_h",n:"Médina Hammamet",r:"cap_bon",sub:"Hammamet",cat:"attraction",lt:36.40,lg:10.61,rt:4.2,dur:50,cost:0,hid:false,sn:["printemps","ete","automne","hiver"],cr:.55,d:"Petite médina fortifiée face mer.",meal:null},
+  {id:"cb_neapolis",n:"Neapolis Nabeul",r:"cap_bon",sub:"Nabeul",cat:"attraction",lt:36.46,lg:10.73,rt:4.0,dur:40,cost:5,hid:true,sn:["printemps","automne"],cr:.08,d:"Site archéo romain, garum et mosaïques.",meal:null},
+  // MORE NORD-EST
+  {id:"ne_lac_biz",n:"Lac de Bizerte",r:"nord_est",sub:"Bizerte",cat:"nature",lt:37.22,lg:9.85,rt:4.0,dur:50,cost:0,hid:false,sn:["printemps","ete","automne"],cr:.15,d:"Plus grand lac naturel, flamants.",meal:null},
+  {id:"ne_plage_r",n:"Plage Rémel",r:"nord_est",sub:"Bizerte",cat:"beach",lt:37.21,lg:10.15,rt:4.3,dur:100,cost:0,hid:true,sn:["ete"],cr:.12,d:"Plage sauvage au sable blanc doré.",meal:null},
+  // MORE SUD
+  {id:"se_ghomra",n:"Ghomrassen",r:"sud_est",sub:"Tataouine",cat:"attraction",lt:33.06,lg:10.34,rt:4.0,dur:40,cost:0,hid:true,sn:["automne","hiver","printemps"],cr:.03,d:"Village berbère, ksour en ruines.",meal:null},
+  {id:"se_resto_d",n:"Café Désert",r:"sud_ouest",sub:"Douz",cat:"restaurant",lt:33.46,lg:8.82,rt:4.1,dur:60,cost:18,hid:false,sn:["automne","hiver"],cr:.15,d:"Agneau méchoui, sous tente bédouine.",meal:"dinner"},
+  {id:"sw_vieuxtozeur",n:"Vieux Tozeur Ouled Hadef",r:"sud_ouest",sub:"Tozeur",cat:"attraction",lt:33.92,lg:8.14,rt:4.3,dur:50,cost:0,hid:false,sn:["automne","hiver","printemps"],cr:.20,d:"Briques jaunes géométriques, ruelles.",meal:null},
+  {id:"sw_lezard",n:"Lézard Rouge Train",r:"sud_ouest",sub:"Tamerza",cat:"attraction",lt:34.35,lg:7.93,rt:4.4,dur:90,cost:15,hid:false,sn:["automne","hiver","printemps"],cr:.15,d:"Train historique gorges de Selja.",meal:null},
+  // MORE DJERBA
+  {id:"dj_plsidi",n:"Plage Sidi Mahrez",r:"djerba",sub:"Midoun",cat:"beach",lt:33.83,lg:10.98,rt:4.5,dur:100,cost:0,hid:false,sn:["ete","printemps"],cr:.40,d:"Plus belle plage de Djerba, sable blanc.",meal:null},
+  {id:"dj_lella",n:"Lella Hadhria Museum",r:"djerba",sub:"Midoun",cat:"attraction",lt:33.80,lg:10.93,rt:4.2,dur:50,cost:12,hid:false,sn:["printemps","ete","automne","hiver"],cr:.25,d:"1000 pièces art tunisien et arabe.",meal:null},
+  {id:"dj_cafe_har",n:"Café Haroun",r:"djerba",sub:"Houmt Souk",cat:"cafe",lt:33.87,lg:10.85,rt:4.3,dur:35,cost:7,hid:true,sn:["printemps","ete","automne","hiver"],cr:.20,d:"Vue port pêcheurs, café turc parfait.",meal:"breakfast"},
+  // MORE KAIROUAN
+  {id:"k_zaouia",n:"Zaouia Sidi Abid",r:"centre",sub:"Kairouan",cat:"mosque",lt:35.68,lg:10.10,rt:4.2,dur:25,cost:0,hid:true,sn:["printemps","automne","hiver"],cr:.15,d:"Zellige andalou, coupoles blanches.",meal:null},
+  {id:"k_makroudh2",n:"Pâtisserie Makroudh",r:"centre",sub:"Kairouan",cat:"restaurant",lt:35.68,lg:10.10,rt:4.3,dur:30,cost:5,hid:false,sn:["printemps","ete","automne","hiver"],cr:.40,d:"Meilleur makroudh de Tunisie, dattes Deglet.",meal:"breakfast"},
+  {id:"h_bizerta",n:"Bizerta Resort",r:"nord_est",sub:"Bizerte",cat:"hotel",lt:37.27,lg:9.88,rt:4.3,dur:0,cost:220,hid:false,sn:["printemps","ete","automne","hiver"],cr:.20,d:"4★ Face vieux port, piscine, spa.",meal:null},
+  {id:"h_capbon",n:"Hasdrubal Hammamet",r:"cap_bon",sub:"Hammamet",cat:"hotel",lt:36.40,lg:10.62,rt:4.6,dur:0,cost:400,hid:false,sn:["printemps","ete","automne","hiver"],cr:.20,d:"5★ Thalasso & Spa, plage privée, 5 restos.",meal:null},
+  {id:"h_cigale_m",n:"La Cigale Monastir",r:"sahel",sub:"Monastir",cat:"hotel",lt:35.77,lg:10.82,rt:4.5,dur:0,cost:300,hid:false,sn:["printemps","ete","automne","hiver"],cr:.25,d:"5★ Front de mer, golf, spa.",meal:null},
+  // === ZAGHOUAN ===
+  {id:"z_temple",n:"Temple des Eaux",r:"zaghouan",sub:"Zaghouan",cat:"attraction",lt:36.40,lg:10.14,rt:4.4,dur:50,cost:5,hid:false,sn:["printemps","automne","hiver"],cr:.15,d:"Temple romain dédié aux nymphes, aqueduc.",meal:null},
+  {id:"z_jbel",n:"Jbel Zaghouan",r:"zaghouan",sub:"Zaghouan",cat:"nature",lt:36.38,lg:10.12,rt:4.3,dur:120,cost:0,hid:true,sn:["printemps","automne"],cr:.08,d:"Randonnée 1295m, panorama sur le Cap Bon.",meal:null},
+  {id:"z_medina",n:"Médina Zaghouan",r:"zaghouan",sub:"Zaghouan",cat:"attraction",lt:36.40,lg:10.14,rt:4.0,dur:40,cost:0,hid:false,sn:["printemps","ete","automne","hiver"],cr:.15,d:"Ruelles blanches, artisanat, calme.",meal:null},
+  {id:"z_thermes",n:"Thermes Jbel Oust",r:"zaghouan",sub:"Jbel Oust",cat:"nature",lt:36.46,lg:10.04,rt:4.1,dur:60,cost:15,hid:false,sn:["printemps","automne","hiver"],cr:.10,d:"Sources chaudes naturelles, spa ancestral.",meal:null},
+  {id:"z_kayak",n:"Kayak Barrage Zaghouan",r:"zaghouan",sub:"Zaghouan",cat:"activity",lt:36.38,lg:10.10,rt:4.2,dur:90,cost:35,hid:false,sn:["printemps","ete","automne"],cr:.10,d:"Kayak sur lac de barrage, cadre montagneux.",meal:null},
+  {id:"z_cafe",n:"Café Ain El Jenna",r:"zaghouan",sub:"Zaghouan",cat:"cafe",lt:36.40,lg:10.14,rt:4.1,dur:30,cost:6,hid:false,sn:["printemps","ete","automne","hiver"],cr:.10,d:"Source fraîche, thé sous les arbres.",meal:"breakfast"},
+  {id:"z_resto",n:"Le Zaghouanais",r:"zaghouan",sub:"Zaghouan",cat:"restaurant",lt:36.40,lg:10.14,rt:4.0,dur:60,cost:20,hid:false,sn:["printemps","ete","automne","hiver"],cr:.10,d:"Cuisine montagnarde, agneau rôti.",meal:"lunch"},
+  // === NORD-OUEST EXPANDED: Béja, Makthar, Bou Salem ===
+  {id:"nw_beja",n:"Béja Ville",r:"nord_ouest",sub:"Béja",cat:"attraction",lt:36.73,lg:9.18,rt:3.9,dur:50,cost:0,hid:false,sn:["printemps","automne","hiver"],cr:.05,d:"Grenier de Rome, architecture coloniale.",meal:null},
+  {id:"nw_thibar",n:"Domaine Thibar",r:"nord_ouest",sub:"Béja",cat:"nature",lt:36.52,lg:9.10,rt:4.0,dur:60,cost:10,hid:true,sn:["printemps","automne"],cr:.03,d:"Vignobles coloniaux, dégustation vin tunisien.",meal:null},
+  {id:"nw_makthar",n:"Ruines Makthar",r:"nord_ouest",sub:"Béja",cat:"attraction",lt:35.85,lg:9.20,rt:4.2,dur:70,cost:5,hid:true,sn:["printemps","automne"],cr:.03,d:"Arc Trajan, thermes romains, forum antique.",meal:null},
+  // === ACTIVITÉS TOURISTIQUES ===
+  // Tozeur
+  {id:"toz_quad",n:"Quad Désert Tozeur",r:"sud_ouest",sub:"Tozeur",cat:"activity",lt:33.90,lg:8.10,rt:4.5,dur:120,cost:80,hid:false,sn:["automne","hiver","printemps"],cr:.25,d:"Excursion quad dans les dunes, Chott el-Jérid.",meal:null},
+  {id:"toz_chameau",n:"Balade Chameau Douz",r:"sud_ouest",sub:"Douz",cat:"activity",lt:33.46,lg:8.82,rt:4.4,dur:90,cost:40,hid:false,sn:["automne","hiver"],cr:.30,d:"Méharée au coucher du soleil dans le Grand Erg.",meal:null},
+  {id:"toz_bivouac",n:"Bivouac Sahara",r:"sud_ouest",sub:"Douz",cat:"activity",lt:33.40,lg:8.80,rt:4.6,dur:180,cost:120,hid:true,sn:["automne","hiver"],cr:.05,d:"Nuit sous les étoiles, repas bédouin, feu de camp.",meal:null},
+  // Mahdia
+  {id:"mah_paddle",n:"Paddle Mahdia",r:"sahel",sub:"Mahdia",cat:"activity",lt:35.50,lg:11.06,rt:4.2,dur:60,cost:30,hid:false,sn:["ete","printemps"],cr:.20,d:"Stand-up paddle, eau cristalline face cap Afrique.",meal:null},
+  // Monastir
+  {id:"mon_plongee",n:"Plongée Monastir",r:"sahel",sub:"Monastir",cat:"activity",lt:35.78,lg:10.85,rt:4.3,dur:120,cost:80,hid:false,sn:["ete","printemps"],cr:.15,d:"Plongée épave, récifs, poissons méditerranéens.",meal:null},
+  // El Haouaria
+  {id:"hao_plongee",n:"Plongée El Haouaria",r:"cap_bon",sub:"El Haouaria",cat:"activity",lt:37.06,lg:11.00,rt:4.5,dur:120,cost:80,hid:false,sn:["ete","printemps"],cr:.10,d:"Meilleur spot plongée Tunisie, grottes sous-marines.",meal:null},
+  {id:"hao_bateau",n:"Excursion Zembra",r:"cap_bon",sub:"El Haouaria",cat:"activity",lt:37.06,lg:11.00,rt:4.6,dur:180,cost:100,hid:false,sn:["ete"],cr:.08,d:"Bateau vers îles Zembra & Zembretta, réserve naturelle.",meal:null},
+  // Djerba
+  {id:"dj_parachute",n:"Parachute Djerba",r:"djerba",sub:"Midoun",cat:"activity",lt:33.82,lg:10.98,rt:4.3,dur:30,cost:60,hid:false,sn:["ete","printemps"],cr:.25,d:"Parachute ascensionnel, vue île depuis les airs.",meal:null},
+  {id:"dj_cheval",n:"Balade Cheval Djerba",r:"djerba",sub:"Midoun",cat:"activity",lt:33.80,lg:10.95,rt:4.1,dur:60,cost:35,hid:false,sn:["printemps","ete","automne","hiver"],cr:.15,d:"Galop sur plage, coucher de soleil.",meal:null},
+  // Sousse
+  {id:"s_bled_arbi",n:"Bled Arbi Sousse",r:"sahel",sub:"Sousse",cat:"attraction",lt:35.82,lg:10.59,rt:4.0,dur:60,cost:0,hid:false,sn:["printemps","ete","automne","hiver"],cr:.20,d:"Quartier traditionnel, vie locale authentique.",meal:null},
+  // Tabarka
+  {id:"tab_plongee",n:"Plongée Tabarka",r:"nord_ouest",sub:"Tabarka",cat:"activity",lt:36.96,lg:8.75,rt:4.4,dur:120,cost:80,hid:false,sn:["ete","printemps"],cr:.15,d:"Corail rouge, mérous, fonds spectaculaires.",meal:null},
+  // Bizerte
+  {id:"biz_bateau",n:"Tour Bateau Bizerte",r:"nord_est",sub:"Bizerte",cat:"activity",lt:37.28,lg:9.87,rt:4.2,dur:90,cost:45,hid:false,sn:["ete","printemps"],cr:.20,d:"Tour du vieux port et lac, grottes côtières.",meal:null},
+  // Hammamet
+  {id:"ham_parachute",n:"Parachute Hammamet",r:"cap_bon",sub:"Hammamet",cat:"activity",lt:36.40,lg:10.62,rt:4.1,dur:30,cost:50,hid:false,sn:["ete","printemps"],cr:.30,d:"Vol en parachute ascensionnel sur le golfe.",meal:null},
+  // === SUD-EST EXPANDED: Gabès, Médenine, Zarzis ===
+  {id:"se_gabes",n:"Oasis Gabès",r:"sud_est",sub:"Gabès",cat:"nature",lt:33.88,lg:10.10,rt:4.1,dur:70,cost:0,hid:false,sn:["automne","hiver","printemps"],cr:.10,d:"Unique oasis maritime au monde, palmeraie littorale.",meal:null},
+  {id:"se_gabes_souk",n:"Souk Jara Gabès",r:"sud_est",sub:"Gabès",cat:"attraction",lt:33.88,lg:10.10,rt:4.0,dur:40,cost:0,hid:false,sn:["printemps","automne","hiver"],cr:.10,d:"Grand marché traditionnel, henné, épices.",meal:null},
+  {id:"se_medenine",n:"Ksour Médenine",r:"sud_est",sub:"Médenine & Zarzis",cat:"attraction",lt:33.35,lg:10.50,rt:4.2,dur:50,cost:3,hid:false,sn:["automne","hiver","printemps"],cr:.08,d:"Greniers voûtés berbères, architecture spectaculaire.",meal:null},
+  {id:"se_zarzis",n:"Plage Zarzis",r:"sud_est",sub:"Médenine & Zarzis",cat:"beach",lt:33.50,lg:11.10,rt:4.3,dur:100,cost:0,hid:false,sn:["ete","printemps"],cr:.10,d:"Sable blanc immaculé, mer turquoise, calme.",meal:null},
+  {id:"se_douiret",n:"Village Douiret",r:"sud_est",sub:"Tataouine",cat:"attraction",lt:32.87,lg:10.27,rt:4.4,dur:60,cost:0,hid:true,sn:["automne","hiver","printemps"],cr:.03,d:"Village troglodyte abandonné, vue époustouflante.",meal:null},
+  {id:"se_cafe_gab",n:"Café Oasis Gabès",r:"sud_est",sub:"Gabès",cat:"cafe",lt:33.88,lg:10.10,rt:4.0,dur:30,cost:5,hid:false,sn:["printemps","ete","automne","hiver"],cr:.08,d:"Thé sous palmiers, frais de dattes.",meal:"breakfast"},
+  {id:"se_resto_gab",n:"Le Palmier Gabès",r:"sud_est",sub:"Gabès",cat:"restaurant",lt:33.88,lg:10.10,rt:4.1,dur:60,cost:18,hid:false,sn:["printemps","ete","automne","hiver"],cr:.08,d:"Poisson charmoula, spécialité gabésienne.",meal:"lunch"},
+
+  // === MISSING NORD-OUEST: Bou Salem, Tajerouine ===
+  {id:"nw_bousalem",n:"Bou Salem",r:"nord_ouest",sub:"Bou Salem",cat:"nature",lt:36.62,lg:8.97,rt:3.8,dur:40,cost:0,hid:true,sn:["printemps","automne"],cr:.03,d:"Vallée de la Medjerda, agriculture, calme rural.",meal:null},
+  {id:"nw_tajerouine",n:"Tajerouine",r:"nord_ouest",sub:"Le Kef",cat:"attraction",lt:35.89,lg:8.55,rt:3.7,dur:40,cost:0,hid:true,sn:["printemps","automne"],cr:.02,d:"Petite ville historique, ruines romaines Haïdra à proximité.",meal:null},
+  {id:"nw_haidra",n:"Ruines Haïdra",r:"nord_ouest",sub:"Le Kef",cat:"attraction",lt:35.57,lg:8.46,rt:4.3,dur:80,cost:5,hid:true,sn:["printemps","automne"],cr:.02,d:"Site archéologique majeur, arc de Septime Sévère, basiliques.",meal:null},
+  // === MISSING NORD-EST: Ghar El Melh, Raf Raf plage ===
+  {id:"ne_ghar",n:"Ghar El Melh",r:"nord_est",sub:"Ghar El Melh",cat:"attraction",lt:37.17,lg:10.19,rt:4.1,dur:50,cost:0,hid:true,sn:["printemps","ete","automne"],cr:.05,d:"Port punique, forts ottomans, lagune préservée.",meal:null},
+  {id:"ne_rafraf",n:"Plage Raf Raf",r:"nord_est",sub:"Raf Raf",cat:"beach",lt:37.19,lg:10.18,rt:4.4,dur:100,cost:0,hid:false,sn:["ete","printemps"],cr:.15,d:"Plus belle plage du Nord, sable fin, falaises.",meal:null},
+  {id:"ne_cafe_raf",n:"Café Sidi Ali El Mekki",r:"nord_est",sub:"Ghar El Melh",cat:"cafe",lt:37.18,lg:10.17,rt:4.0,dur:30,cost:5,hid:true,sn:["printemps","ete","automne"],cr:.05,d:"Vue lagune et montagne, thé aux pignons.",meal:"breakfast"},
+  // === MISSING CAP BON: Korba, Soliman ===
+  {id:"cb_korba",n:"Lagune de Korba",r:"cap_bon",sub:"Korba",cat:"nature",lt:36.58,lg:10.86,rt:4.2,dur:50,cost:0,hid:false,sn:["printemps","automne","hiver"],cr:.10,d:"Zone humide Ramsar, flamants roses, oiseaux migrateurs.",meal:null},
+  {id:"cb_korba_pl",n:"Plage Korba",r:"cap_bon",sub:"Korba",cat:"beach",lt:36.58,lg:10.87,rt:4.0,dur:80,cost:0,hid:false,sn:["ete","printemps"],cr:.15,d:"Longue plage sauvage, peu fréquentée.",meal:null},
+  {id:"cb_soliman",n:"Soliman Plage",r:"cap_bon",sub:"Soliman",cat:"beach",lt:36.70,lg:10.52,rt:3.9,dur:80,cost:0,hid:false,sn:["ete","printemps"],cr:.20,d:"Plage familiale proche Tunis, restaurants poisson.",meal:null},
+  {id:"cb_soliman_v",n:"Marché Soliman",r:"cap_bon",sub:"Soliman",cat:"attraction",lt:36.69,lg:10.49,rt:3.8,dur:40,cost:0,hid:true,sn:["printemps","ete","automne","hiver"],cr:.10,d:"Souk dominical animé, produits du Cap Bon.",meal:null},
+
+];
+
+var PROFILES={
+  aventurier:{l:"Aventurier",i:"🧗",w:{attraction:1,nature:1.6,restaurant:.5,cafe:.4,hotel:.3,beach:.8,activity:1.2,mosque:.5}},
+  culturel:{l:"Culturel",i:"🎭",w:{attraction:1.5,nature:.5,restaurant:.9,cafe:1.2,hotel:.3,beach:.3,activity:.5,mosque:1.4}},
+  nature_p:{l:"Nature",i:"🌿",w:{attraction:.5,nature:1.8,restaurant:.4,cafe:.6,hotel:.3,beach:1,activity:1,mosque:.2}},
+  gourmand:{l:"Gourmand",i:"🍽️",w:{attraction:.6,nature:.4,restaurant:1.8,cafe:1.5,hotel:.5,beach:.6,activity:.6,mosque:.2}},
+  photo:{l:"Photo",i:"📸",w:{attraction:1.3,nature:1.5,restaurant:.4,cafe:.8,hotel:.2,beach:.9,activity:.6,mosque:1}},
+  detente:{l:"Détente",i:"🧘",w:{attraction:.3,nature:1.3,restaurant:1,cafe:1.3,hotel:1.5,beach:1.6,activity:.6,mosque:.2}},
+  spirituel:{l:"Spirituel",i:"🕌",w:{attraction:1.2,nature:.8,restaurant:.4,cafe:.5,hotel:.3,beach:.1,activity:.6,mosque:1.8}},
+  hotelier:{l:"Hôtels 5★",i:"🏨",w:{attraction:.5,nature:.3,restaurant:.8,cafe:.5,hotel:2,beach:.6,activity:.6,mosque:.2}}
+};
+var COMPS=[{k:"solo",l:"Seul(e)",i:"🚶"},{k:"couple",l:"Couple",i:"💑"},{k:"famille",l:"Famille",i:"👨‍👩‍👧‍👦"},{k:"amis",l:"Amis",i:"👯"},{k:"guide",l:"Guide",i:"🎙️"}];
+var SEASONS={printemps:{l:"Printemps",i:"🌸",s:"Mars - Mai"},ete:{l:"Été",i:"☀️",s:"Juin - Août"},automne:{l:"Automne",i:"🍂",s:"Sep - Nov"},hiver:{l:"Hiver",i:"❄️",s:"Déc - Fév"}};
+var ML={breakfast:"🌅 Petit-déjeuner",lunch:"☀️ Déjeuner",dinner:"🌙 Dîner"};
+
+// Zone definitions for AI mode
+var ZONES={
+  all:{l:"Toute la Tunisie",i:"🇹🇳",g:"top",regions:["tunis","sahel","djerba","cap_bon","sud_ouest","nord_ouest","sud_est","nord_est","centre","sfax","zaghouan"]},
+  nord:{l:"Nord",i:"🏔️",g:"top",regions:["tunis","nord_ouest","nord_est","cap_bon","zaghouan"]},
+  centre_all:{l:"Centre & Sahel",i:"🏟️",g:"top",regions:["centre","sahel","sfax"]},
+  sud:{l:"Sud & Îles",i:"🏜️",g:"top",regions:["sud_ouest","sud_est","djerba"]},
+  tunis:{l:"Grand Tunis",i:"🏛️",g:"reg",regions:["tunis"]},
+  nord_ouest:{l:"Nord-Ouest",i:"🌲",g:"reg",regions:["nord_ouest"]},
+  nord_est:{l:"Nord-Est",i:"⚓",g:"reg",regions:["nord_est"]},
+  zaghouan:{l:"Zaghouan",i:"⛰️",g:"reg",regions:["zaghouan"]},
+  cap_bon:{l:"Cap Bon",i:"🌊",g:"reg",regions:["cap_bon"]},
+  sahel:{l:"Sahel",i:"🏟️",g:"reg",regions:["sahel"]},
+  centre:{l:"Kairouan & El Jem",i:"🕌",g:"reg",regions:["centre"]},
+  sfax:{l:"Sfax & Kerkennah",i:"🐚",g:"reg",regions:["sfax"]},
+  sud_ouest:{l:"Sud-Ouest",i:"🌴",g:"reg",regions:["sud_ouest"]},
+  sud_est:{l:"Sud-Est",i:"🏜️",g:"reg",regions:["sud_est"]},
+  djerba:{l:"Djerba",i:"🏝️",g:"reg",regions:["djerba"]}
+};
+
+// Distance (km) between region centers - for geographic planning
+var RDIST={};
+(function(){
+  REGIONS.forEach(function(a){REGIONS.forEach(function(b){
+    var d=Math.sqrt(Math.pow((a.lt-b.lt)*111,2)+Math.pow((a.lg-b.lg)*90,2));
+    RDIST[a.id+":"+b.id]=Math.round(d);
+  })});
+})();
+function regDist(a,b){return RDIST[a+":"+b]||999}
+
+// Logo SVG - TUN Trip (Tunisia map + airplane)
+function Logo(props){
+  var sz=props.size||60;
+  return <svg width={sz} height={sz} viewBox="0 0 60 60">
+    <defs>
+      <linearGradient id="lg_bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#d42b2b"/><stop offset="100%" stopColor="#a01c1c"/></linearGradient>
+    </defs>
+    <rect width="60" height="60" rx="12" fill="url(#lg_bg)"/>
+    <path d="M30,6 C29,6 28.5,7 29,8 L30,10 C31,10.5 32.5,10 33,9.5 C34,9 34.5,10 34,11 L33,13 C32,14 31,14.5 30.5,16 C30,17.5 29.5,18 29,18.5 C28,19.5 28.5,20.5 29,21 C30,22 31,21.5 32,22.5 C33,23.5 33.5,25 33,26 C32.5,27 31.5,27.5 31,28 C30,29 30.5,30.5 30,32 C29.5,33.5 28.5,34 28,35 C27.5,36 27,37.5 26.5,38.5 C26,39.5 25,40 24.5,41 C24,42 23,42.5 22.5,43 C22,43.5 22,44.5 23,45 C24,45 25,44.5 26,44 C27,43.5 28,42.5 29,42 C29.5,41.5 30.5,42 31,42.5 C31.5,43 32.5,43 33,42.5 C33.5,42 34,41 34.5,40 C35,39 36,38 36.5,37.5 C37,37 37,36 36.5,35 C36,34 35,33.5 34.5,32.5 C34,31.5 34.5,30 35,29 C35.5,28 36,26.5 35.5,25 C35,24 34,23 33.5,22 C33,21 33.5,19.5 34,18.5 C34.5,17.5 34,16 33.5,15 C33,14 32,13 31.5,12 C31,11 31,9.5 30.5,8 C30.2,7 30,6 30,6 Z" fill="#fff" opacity=".95"/>
+    <g transform="translate(22,20) rotate(-30,10,5)">
+      <path d="M10,0 L12,4 L20,3 L12,5.5 L14,10 L10,6 L6,10 L8,5.5 L0,3 L8,4 Z" fill="#1a1a1a" opacity=".85"/>
+    </g>
+    <path d="M15,28 Q22,22 35,18" fill="none" stroke="#1a1a1a" strokeWidth="1" opacity=".5" strokeDasharray="2,2"/>
+  </svg>;
+}
+
+function scoreAll(profs,comp){
+  var mw={};profs.forEach(function(k){var w=PROFILES[k].w;Object.keys(w).forEach(function(t){mw[t]=(mw[t]||0)+w[t]})});
+  Object.keys(mw).forEach(function(t){mw[t]/=(profs.length||1)});
+  return PL.map(function(s){
+    var sc=(mw[s.cat]||.5)*30+s.rt*10;if(s.hid)sc+=10;
+    if(comp==="couple"&&(s.cat==="beach"||s.cat==="restaurant"))sc+=8;
+    if(comp==="guide"&&(s.cat==="attraction"||s.cat==="mosque"))sc+=12;
+    if(comp==="amis"&&s.cat==="beach")sc+=10;
+    return Object.assign({},s,{sc:Math.round(Math.max(0,sc)*10)/10});
+  }).sort(function(a,b){return b.sc-a.sc});
+}
+
+// Haversine-like distance in km between two spots
+function spotDist(a,b){
+  if(!a||!b||!a.lt||!b.lt)return 999;
+  return Math.sqrt(Math.pow((a.lt-b.lt)*111,2)+Math.pow((b.lg-a.lg)*90*Math.cos(a.lt*Math.PI/180),2));
+}
+
+function aiPlan(profs,comp,nD,wBk,wLu,wDi,zones){
+  var MAX_D=40; // 40km max entre spots
+  var all=scoreAll(profs,comp);
+  // Merge regions from all selected zones (deduplicated)
+  var zArr=Array.isArray(zones)?zones:zones?[zones]:["all"];
+  var zoneRegs=[];
+  zArr.forEach(function(zk){
+    var zDef=ZONES[zk]||ZONES.all;
+    zDef.regions.forEach(function(r){if(zoneRegs.indexOf(r)<0)zoneRegs.push(r)});
+  });
+  // Filter by merged regions
+  var pool=all.filter(function(s){return zoneRegs.indexOf(s.r)>=0});
+  var acts=pool.filter(function(s){return!s.meal&&s.cat!=="hotel"});
+  var bkfs=pool.filter(function(s){return s.meal==="breakfast"});
+  var luns=pool.filter(function(s){return s.meal==="lunch"});
+  var dins=pool.filter(function(s){return s.meal==="dinner"});
+  var hotels=pool.filter(function(s){return s.cat==="hotel"});
+  // Shuffle top acts for variety (keep scoring but randomize within tiers)
+  var tier1=acts.slice(0,Math.ceil(acts.length*.4));
+  var tier2=acts.slice(Math.ceil(acts.length*.4));
+  for(var ti=tier1.length-1;ti>0;ti--){var tj=Math.floor(Math.random()*(ti+1));var tt=tier1[ti];tier1[ti]=tier1[tj];tier1[tj]=tt}
+  acts=tier1.concat(tier2);
+  // Used tracker - NEVER reset, each spot used only once across all days
+  var used={};
+  var usedMeals={};
+  var days=[];
+  for(var d=0;d<nD;d++){
+    // Pick seed: highest scoring unused activity
+    var seed=null;
+    for(var si=0;si<acts.length;si++){
+      if(!used[acts[si].id]){seed=acts[si];used[acts[si].id]=true;break}
+    }
+    if(!seed)break; // No more unused spots - stop adding days
+    // Build cluster: find nearby spots within MAX_D km of seed
+    var cluster=[seed];
+    var center={lt:seed.lt,lg:seed.lg};
+    var beachUsed=seed.cat==="beach";
+    // Candidates: sorted by distance to seed, ONLY unused
+    var cands=acts.filter(function(s){return!used[s.id]});
+    cands.sort(function(a,b){return spotDist(a,center)-spotDist(b,center)});
+    for(var ci=0;ci<cands.length&&cluster.length<5;ci++){
+      // Check max distance to ALL spots already in cluster
+      var tooFar=false;
+      for(var ck=0;ck<cluster.length;ck++){
+        if(spotDist(cands[ci],cluster[ck])>MAX_D){tooFar=true;break}
+      }
+      if(tooFar)continue;
+      if(cands[ci].cat==="beach"){if(beachUsed)continue;beachUsed=true}
+      cluster.push(cands[ci]);
+      used[cands[ci].id]=true;
+    }
+    // Sort cluster by nearest-neighbor path
+    var ordered=[cluster[0]];var rem=cluster.slice(1);
+    while(rem.length){
+      var last=ordered[ordered.length-1];
+      var best=-1,bestD=Infinity;
+      for(var ri=0;ri<rem.length;ri++){
+        var dd=spotDist(last,rem[ri]);
+        if(dd<bestD){bestD=dd;best=ri}
+      }
+      ordered.push(rem[best]);rem.splice(best,1);
+    }
+    // Determine region of majority spots
+    var regCount={};
+    ordered.forEach(function(s){regCount[s.r]=(regCount[s.r]||0)+1});
+    var rid=Object.keys(regCount).sort(function(a,b){return regCount[b]-regCount[a]})[0];
+    // Build timeline with meals
+    var spots=[];var cm=0;
+    // Breakfast: find one near cluster center, not already used
+    if(wBk){
+      var bkC=bkfs.filter(function(s){return!usedMeals[s.id]&&spotDist(s,center)<MAX_D});
+      if(!bkC.length)bkC=bkfs.filter(function(s){return!usedMeals[s.id]});
+      if(!bkC.length)bkC=bkfs;
+      var bk=bkC[0];
+      if(bk){usedMeals[bk.id]=true;spots.push(Object.assign({},bk,{stM:cm,alM:40,tv:0,_ml:"breakfast"}));cm+=55}
+    }
+    var nAct=ordered.length;
+    for(var a=0;a<nAct;a++){
+      var sp=ordered[a];
+      spots.push(Object.assign({},sp,{stM:cm,alM:Math.min(sp.dur||60,80),tv:12}));
+      cm+=Math.min(sp.dur||60,80)+12;
+      // Lunch after half
+      if(wLu&&a===Math.floor(nAct/2)-1){
+        var lnC=luns.filter(function(s){return!usedMeals[s.id]&&spotDist(s,center)<MAX_D});
+        if(!lnC.length)lnC=luns.filter(function(s){return!usedMeals[s.id]});
+        if(!lnC.length)lnC=luns;
+        var ln=lnC[0];
+        if(ln){usedMeals[ln.id]=true;spots.push(Object.assign({},ln,{stM:cm,alM:60,tv:10,_ml:"lunch"}));cm+=70}
+      }
+    }
+    // Dinner
+    if(wDi){
+      var dnC=dins.filter(function(s){return!usedMeals[s.id]&&spotDist(s,center)<MAX_D});
+      if(!dnC.length)dnC=dins.filter(function(s){return!usedMeals[s.id]});
+      if(!dnC.length)dnC=dins;
+      var dn=dnC[0];
+      if(dn){usedMeals[dn.id]=true;spots.push(Object.assign({},dn,{stM:cm,alM:75,tv:10,_ml:"dinner"}));cm+=85}
+    }
+    // Hotel
+    var wHo=profs.indexOf("hotelier")>=0;
+    if(wHo){
+      var htC=hotels.filter(function(s){return spotDist(s,center)<MAX_D});
+      if(!htC.length)htC=hotels;
+      var ht=htC.length?htC[d%htC.length]:null;
+      if(ht){spots.push(Object.assign({},ht,{stM:cm,alM:0,tv:10,_ht:true}));cm+=10}
+    }
+    days.push({rid:rid,spots:spots});
+  }
+  return days;
+}
+
+function scorePL(rids,profs,comp,sea,avC,iH){
+  var mw={};profs.forEach(function(k){var w=PROFILES[k].w;Object.keys(w).forEach(function(t){mw[t]=(mw[t]||0)+w[t]})});
+  Object.keys(mw).forEach(function(t){mw[t]/=(profs.length||1)});
+  var ridArr=Array.isArray(rids)?rids:[rids];
+  return PL.filter(function(p){return ridArr.indexOf(p.r)>=0}).map(function(s){
+    var sc=(mw[s.cat]||.5)*30+s.rt*10;if(s.hid&&iH)sc+=12;if(s.hid&&!iH)sc-=10;
+    if(sea&&s.sn&&s.sn.indexOf(sea)>=0)sc+=15;else if(sea)sc-=20;
+    if(avC)sc-=Math.min(1,s.cr||0)*20;
+    if(comp==="couple"&&(s.cat==="beach"||s.cat==="restaurant"))sc+=8;
+    if(comp==="guide"&&(s.cat==="attraction"||s.cat==="mosque"))sc+=12;
+    return Object.assign({},s,{sc:Math.round(Math.max(0,sc)*10)/10});
+  }).sort(function(a,b){return b.sc-a.sc});
+}
+
+// Leaflet Interactive Map
+function LeafletMap(props){
+  var containerRef=useRef(null);
+  var mapRef=useRef(null);
+  var lt=props.lt||34.5,lg=props.lg||9.5,z=props.z||7,h=props.h||220;
+  var spots=props.spots||[];var rid=props.activeRid;
+  var spotsKey=spots.map(function(s){return s.id||s.n}).join(",");
+
+  useEffect(function(){
+    if(!document.getElementById("leaflet-css")){
+      var link=document.createElement("link");link.id="leaflet-css";link.rel="stylesheet";
+      link.href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css";
+      document.head.appendChild(link);
+    }
+    function initMap(){
+      if(!containerRef.current||!window.L)return;
+      if(mapRef.current){mapRef.current.remove();mapRef.current=null}
+      var map=window.L.map(containerRef.current,{zoomControl:true,attributionControl:false}).setView([lt,lg],z);
+      window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18}).addTo(map);
+      var colors=["#c17f3e","#1a6985","#27ae60","#c0392b","#8b5cf6","#e67e22","#16a085","#2c3e50"];
+      var bounds=[];
+      spots.forEach(function(s,i){
+        var isMeal=!!s._ml;var isHotel=!!s._ht;
+        var mCol=isMeal?"#e67e22":isHotel?"#8b5cf6":colors[i%8];
+        var mIcon=isMeal?"🍽":isHotel?"🏨":(i+1);
+        var icon=window.L.divIcon({className:"",html:'<div style="width:24px;height:24px;border-radius:50%;background:'+mCol+';color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)">'+mIcon+"</div>",iconSize:[24,24],iconAnchor:[12,12]});
+        window.L.marker([s.lt,s.lg],{icon:icon}).addTo(map).bindPopup("<b>"+s.n+"</b><br>"+((s.d||"").substring(0,60)));
+        bounds.push([s.lt,s.lg]);
+      });
+      if(bounds.length>1)map.fitBounds(bounds,{padding:[30,30]});
+      else if(bounds.length===1)map.setView(bounds[0],13);
+      mapRef.current=map;
+      setTimeout(function(){map.invalidateSize()},200);
+    }
+    if(window.L){initMap()}
+    else{
+      if(!document.getElementById("leaflet-js")){
+        var script=document.createElement("script");script.id="leaflet-js";
+        script.src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js";
+        script.onload=initMap;document.head.appendChild(script);
+      }else{var check=setInterval(function(){if(window.L){clearInterval(check);initMap()}},100)}
+    }
+    return function(){if(mapRef.current){mapRef.current.remove();mapRef.current=null}};
+  },[lt,lg,z,spotsKey,rid]);
+
+  return <div ref={containerRef} style={{width:"100%",height:h,borderRadius:14,border:"2px solid "+TN.bd,overflow:"hidden",zIndex:1}}/>;
+}
+
+function Carousel(){
+  var _s=useState(0),idx=_s[0],setIdx=_s[1];
+  useEffect(function(){var t=setInterval(function(){setIdx(function(i){return(i+1)%SLIDES.length})},4000);return function(){clearInterval(t)}},[]);
+  var s=SLIDES[idx];
+  return <div style={{position:"relative",height:200,borderRadius:20,overflow:"hidden",marginBottom:16,boxShadow:"0 4px 20px rgba(0,0,0,.15)"}}>
+    <div style={{position:"absolute",inset:0}}><SlideScene id={s.id}/></div>
+    <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,transparent 35%,rgba(0,0,0,.6) 100%)"}}/>
+    <div style={{position:"absolute",top:12,right:14,display:"flex",gap:4}}>{SLIDES.map(function(_,i){return <div key={i} style={{width:i===idx?22:6,height:6,borderRadius:3,background:i===idx?"#fff":"#fff5",transition:"all .3s",cursor:"pointer"}} onClick={function(){setIdx(i)}}/>})}</div>
+    <div style={{position:"absolute",bottom:18,left:20,right:20}}>
+      <div style={{fontSize:24,fontWeight:700,fontFamily:F,color:"#fff",textShadow:"0 2px 12px rgba(0,0,0,.5)"}}>{s.t}</div>
+      <div style={{fontSize:12,color:"#ffffffcc",marginTop:2}}>{s.s}</div>
+    </div>
+    <div style={{position:"absolute",top:12,left:14,fontSize:9,fontWeight:700,background:"rgba(0,0,0,.35)",color:"#fff",borderRadius:6,padding:"3px 8px",backdropFilter:"blur(4px)"}}>{idx+1}/{SLIDES.length}</div>
+  </div>;
+}
+
+export default function App(){
+  var _u=useState(null),user=_u[0],setUser=_u[1];
+  var _am=useState("login"),aMode=_am[0],setAMode=_am[1];
+  var _an=useState(""),aN=_an[0],setAN=_an[1];
+  var _ae=useState(""),aE=_ae[0],setAE=_ae[1];
+  var _ap=useState(""),aP=_ap[0],setAP=_ap[1];
+  var _aerr=useState(""),aErr=_aerr[0],setAErr=_aerr[1];
+  var _udb=useState({}),uDB=_udb[0],setUDB=_udb[1];
+  var _vw=useState("home"),vw=_vw[0],setVw=_vw[1];
+  var _regs=useState(["tunis"]),regs=_regs[0],setRegs=_regs[1];
+  var _profs=useState([]),profs=_profs[0],setProfs=_profs[1];
+  var _comp=useState("couple"),comp=_comp[0],setComp=_comp[1];
+  var _nD=useState(3),nD=_nD[0],setND=_nD[1];
+  var _zone=useState(["all"]),zones=_zone[0],setZones=_zone[1];
+  var _bud=useState(500),bud=_bud[0],setBud=_bud[1];
+  var _wBk=useState(false),wBk=_wBk[0],setWBk=_wBk[1];
+  var _wLu=useState(false),wLu=_wLu[0],setWLu=_wLu[1];
+  var _wDi=useState(false),wDi=_wDi[0],setWDi=_wDi[1];
+  var _sea=useState("printemps"),sea=_sea[0],setSea=_sea[1];
+  var _sH=useState(9),sH=_sH[0],setSH=_sH[1];
+  var _avC=useState(true),avC=_avC[0],setAvC=_avC[1];
+  var _iH=useState(true),iH=_iH[0],setIH=_iH[1];
+  var _scored=useState([]),scored=_scored[0],setScored=_scored[1];
+  var _sel=useState(new Set()),sel=_sel[0],setSel=_sel[1];
+  var _catF=useState("all"),catF=_catF[0],setCatF=_catF[1];
+  var _itin=useState(null),itin=_itin[0],setItin=_itin[1];
+  var _aD=useState(0),aD=_aD[0],setAD=_aD[1];
+  var _trips=useState([]),trips=_trips[0],setTrips=_trips[1];
+  var _aT=useState(null),aT=_aT[0],setAT=_aT[1];
+  var _gP=useState(0),gP=_gP[0],setGP=_gP[1];
+  var _gT=useState(""),gT=_gT[0],setGT=_gT[1];
+
+  var rObj=REGIONS.find(function(r){return r.id===regs[0]});
+  var rc=function(r){if(Array.isArray(r))return PL.filter(function(p){return r.indexOf(p.r)>=0}).length;return PL.filter(function(p){return p.r===r}).length};
+  var cats=Array.from(new Set(PL.filter(function(p){return regs.indexOf(p.r)>=0}).map(function(p){return p.cat})));
+  var togP=function(k){setProfs(function(p){return p.indexOf(k)>=0?p.filter(function(x){return x!==k}):p.concat([k])})};
+  var togS=function(id){setSel(function(p){var n=new Set(p);n.has(id)?n.delete(id):n.add(id);return n})};
+  var doAuth=function(){
+    if(aMode==="signup"){if(!aN||!aE||!aP){setAErr("Tous les champs requis");return}var db=Object.assign({},uDB);db[aE]={nm:aN,em:aE,pw:aP};setUDB(db);setUser({nm:aN,em:aE})}
+    else{var u=uDB[aE];if(!u||u.pw!==aP){setAErr("Identifiants incorrects");return}setUser({nm:u.nm,em:u.em})}setAErr("")};
+
+  var aiGo=function(){
+    if(!profs.length)return;setVw("ai_load");setGP(0);
+    var steps=[{p:10,t:"Analyse des preferences..."},{p:28,t:"Selection des regions..."},{p:45,t:"Meilleurs spots par region..."},{p:60,t:"Restaurants & cafes..."},{p:78,t:"Petit-dej, Dejeuner, Diner..."},{p:92,t:"Repartition "+nD+" jours..."},{p:100,t:"Votre voyage est pret!"}];
+    steps.forEach(function(s,i){setTimeout(function(){setGP(s.p);setGT(s.t)},250+i*400)});
+    setTimeout(function(){
+      var plan=aiPlan(profs,comp,nD,wBk,wLu,wDi,zones);
+      var allS=[];plan.forEach(function(d){d.spots.forEach(function(s){allS.push(s)})});
+      setItin({days:plan,stats:{total:allS.filter(function(s){return!s._ml&&!s._ht}).length,meals:allS.filter(function(s){return!!s._ml}).length,hotels:allS.filter(function(s){return!!s._ht}).length,cost:allS.reduce(function(a,s){return a+s.cost},0),days:nD},all:allS});
+      setVw("ai_result");setAD(0);
+    },250+7*400+350);
+  };
+
+  var manGo=function(){var s=scorePL(regs,profs,comp,sea,avC,iH);setScored(s);setSel(new Set());setCatF("all");setVw("man_sel")};
+  var manBuild=function(){
+    if(!sel.size)return;setVw("man_load");setGP(0);
+    setTimeout(function(){setGP(30);setGT("Calcul des distances...")},200);
+    setTimeout(function(){setGP(60);setGT("Regroupement geographique...")},500);
+    setTimeout(function(){setGP(90);setGT("Optimisation itineraire...")},800);
+    setTimeout(function(){setGP(100);setGT("Pret!")},1000);
+    setTimeout(function(){
+      var chosen=scored.filter(function(s){return sel.has(s.id)});
+      // Haversine-like distance in km
+      function distKm(a,b){var dLt=(a.lt-b.lt)*111;var dLg=(a.lg-b.lg)*90;return Math.sqrt(dLt*dLt+dLg*dLg)}
+      // Group spots into geographic clusters (max ~40km / ~30min within cluster)
+      var used=new Array(chosen.length).fill(false);
+      var clusters=[];
+      // Sort by latitude (north to south) then longitude for consistent ordering
+      var sorted=chosen.map(function(s,i){return{idx:i,s:s}}).sort(function(a,b){return b.s.lt-a.s.lt||(a.s.lg-b.s.lg)});
+      for(var i=0;i<sorted.length;i++){
+        if(used[sorted[i].idx])continue;
+        var cluster=[sorted[i].s];used[sorted[i].idx]=true;
+        var center={lt:sorted[i].s.lt,lg:sorted[i].s.lg};
+        // Find nearby spots within 40km (~30min)
+        for(var j=i+1;j<sorted.length;j++){
+          if(used[sorted[j].idx])continue;
+          var d=distKm(center,sorted[j].s);
+          if(d<=40){
+            cluster.push(sorted[j].s);used[sorted[j].idx]=true;
+            center={lt:(center.lt+sorted[j].s.lt)/2,lg:(center.lg+sorted[j].s.lg)/2};
+          }
+        }
+        clusters.push(cluster);
+      }
+      // Within each cluster: nearest-neighbor route (no back-and-forth)
+      function optimizeRoute(spots){
+        if(spots.length<=1)return spots;
+        var remaining=spots.slice();var route=[remaining.shift()];
+        while(remaining.length){
+          var last=route[route.length-1];var bestIdx=0;var bestDist=999;
+          for(var r=0;r<remaining.length;r++){
+            var dd=distKm(last,remaining[r]);
+            if(dd<bestDist){bestDist=dd;bestIdx=r}
+          }
+          route.push(remaining.splice(bestIdx,1)[0]);
+        }
+        return route;
+      }
+      clusters=clusters.map(optimizeRoute);
+      // Distribute clusters across days
+      var days=[];
+      if(clusters.length<=nD){
+        // Each cluster gets its own day(s)
+        for(var c=0;c<clusters.length;c++){var cReg=clusters[c][0]?.r||regs[0];days.push({rid:cReg,spots:clusters[c]})}
+        // Fill remaining days if needed
+        while(days.length<nD&&days.length<chosen.length){
+          var biggest=0;
+          for(var bb=1;bb<days.length;bb++){if(days[bb].spots.length>days[biggest].spots.length)biggest=bb}
+          if(days[biggest].spots.length<=1)break;
+          var half=Math.ceil(days[biggest].spots.length/2);
+          var split=days[biggest].spots.splice(half);
+          days.push({rid:days[biggest]?.rid||regs[0],spots:split});
+        }
+      }else{
+        // More clusters than days: merge closest clusters
+        while(clusters.length>nD){
+          var minD=9999;var mi=-1;var mj=-1;
+          for(var a=0;a<clusters.length;a++){for(var b=a+1;b<clusters.length;b++){
+            var cA=clusters[a][0];var cB=clusters[b][0];var dd=distKm(cA,cB);
+            if(dd<minD){minD=dd;mi=a;mj=b}
+          }}
+          clusters[mi]=optimizeRoute(clusters[mi].concat(clusters[mj]));
+          clusters.splice(mj,1);
+        }
+        for(var c=0;c<clusters.length;c++){var cReg=clusters[c][0]?.r||regs[0];days.push({rid:cReg,spots:clusters[c]})}
+      }
+      // Cap at max 5 spots per day, split overflow
+      var capped=[];
+      days.forEach(function(day){
+        if(day.spots.length<=5){capped.push(day)}
+        else{
+          for(var ci=0;ci<day.spots.length;ci+=5){
+            capped.push({rid:day.rid,spots:day.spots.slice(ci,ci+5)});
+          }
+        }
+      });
+      days=capped;
+      // Max 1 beach per day — move excess beaches to other days or remove
+      days.forEach(function(day){
+        var bCount=0;
+        day.spots=day.spots.filter(function(s){
+          if(s.cat==="beach"){bCount++;return bCount<=1}
+          return true;
+        });
+      });
+      // Add timing to each day's spots
+      days=days.map(function(day){
+        var cm=0;
+        return{rid:day.rid,spots:day.spots.map(function(s,j){
+          var tv=j>0?15:0;var du=Math.min(s.dur||60,120);
+          var r=Object.assign({},s,{stM:cm,alM:du,tv:tv});cm+=du+tv;return r;
+        })};
+      });
+      var cost=chosen.reduce(function(a,s){return a+s.cost},0);
+      setItin({days:days,stats:{total:chosen.length,meals:0,cost:cost,days:days.length},all:chosen});
+      setND(days.length);setVw("man_result");setAD(0);
+    },1200);
+  };
+
+  var saveTrip=function(){
+    if(!itin)return;var rIcons=itin.days.map(function(d){return REGIONS.find(function(x){return x.id===d.rid})?.icon||""}).join("");
+    setTrips(function(p){return[{id:Date.now(),nm:rIcons+" "+nD+"j",dy:nD,sp:itin.stats.total,it:itin,dt:new Date().toLocaleDateString()}].concat(p)});setVw("trips");
+  };
+
+  var cs={background:TN.card,borderRadius:20,padding:24,border:"1px solid "+TN.bd,boxShadow:TN.shadow,transition:"all 0.3s ease"};
+  var ls={fontSize:11,fontWeight:700,color:TN.tM,textTransform:"uppercase",letterSpacing:1.2,marginBottom:10,fontFamily:F};
+  var btn={padding:"16px 24px",borderRadius:12,border:"none",fontSize:15,fontWeight:600,fontFamily:F,cursor:"pointer",color:"#fff",background:"linear-gradient(135deg,"+TN.pr+" 0%, "+TN.pD+" 100%)",boxShadow:TN.shadowMd,width:"100%",transition:"all 0.3s ease",transform:"translateY(0)"};
+  var back=function(fn){return <button onClick={fn} style={{fontSize:13,color:TN.pr,background:"none",border:"none",cursor:"pointer",fontWeight:600,marginBottom:12,display:"flex",alignItems:"center",gap:4,transition:"all 0.2s ease"}}>← Retour</button>};
+  var LoadUI=<div style={Object.assign({},cs,{textAlign:"center",marginTop:32,padding:40})}><div style={{width:72,height:72,borderRadius:"50%",background:"linear-gradient(135deg,"+TN.pr+" 0%, "+TN.pD+" 100%)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,fontWeight:700,color:'#fff',margin:"0 auto 20px",boxShadow:TN.shadowMd}}>AI</div><div style={{fontSize:18,fontWeight:600,fontFamily:F,color:TN.tx,marginBottom:4}}>{gT||"Chargement..."}</div><div style={{height:8,borderRadius:12,background:TN.sand,overflow:"hidden",marginTop:20,border:"1px solid "+TN.bd}}><div style={{height:"100%",borderRadius:12,width:gP+"%",background:"linear-gradient(90deg,"+TN.pr+" 0%, "+TN.ac+" 100%)",transition:"width 0.4s cubic-bezier(0.4, 0, 0.2, 1)",boxShadow:"0 0 8px "+TN.pr+"40"}}/></div></div>;
+  var colors=["#c17f3e","#1a6985","#27ae60","#c0392b","#8b5cf6","#e67e22","#16a085","#2c3e50"];
+
+  var DayView=function(props){
+    var day=props.day,di=props.di,dayR=REGIONS.find(function(r){return r.id===day.rid});
+    return <div style={cs}>
+      <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:20}}>
+        <div style={{fontSize:24,fontWeight:700,fontFamily:F,color:TN.tx}}>Jour {di+1}</div>
+        {dayR&&<span style={{fontSize:12,fontWeight:600,background:"linear-gradient(135deg, "+TN.sand+" 0%, #ffe8cc 100%)",color:TN.pD,borderRadius:24,padding:"6px 16px",border:"1px solid "+TN.sD,boxShadow:"0 2px 4px rgba(0,0,0,0.05)"}}>{dayR.icon} {dayR.name}</span>}
+        <span style={{fontSize:11,color:TN.tM,marginLeft:"auto",fontWeight:500}}>{day.spots.filter(function(s){return!s._ml}).length} spots</span>
+      </div>
+      {day.spots.map(function(site,i){
+        var h=sH+Math.floor(site.stM/60),m=site.stM%60;var isMeal=!!site._ml;var isHotel=!!site._ht;
+        var bgCol=isMeal?"#fef9f0":isHotel?"#f0e6ff":"transparent";
+        var circCol=isMeal?"#e67e22":isHotel?"#8b5cf6":colors[i%8];
+        var circIcon=isMeal?"🍽":isHotel?"🏨":(i+1);
+        return <div key={site.id+"-"+i} style={{display:"flex",gap:14,alignItems:"flex-start",marginBottom:i<day.spots.length-1?16:0,paddingBottom:i<day.spots.length-1?16:0,borderBottom:i<day.spots.length-1?"1px solid "+TN.bd:"none"}}>
+          <div style={{display:"flex",flexDirection:"column",alignItems:"center",width:48,flexShrink:0}}>
+            <div style={{fontSize:11,fontWeight:600,color:circCol,fontFamily:F}}>{isHotel?"Nuit":h+":"+(m<10?"0"+m:m)}</div>
+            <div style={{width:28,height:28,borderRadius:"50%",background:circCol,color:"#fff",fontSize:isMeal||isHotel?12:11,fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center",marginTop:4,border:"3px solid #fff",boxShadow:TN.shadowMd}}>{circIcon}</div>
+            {i<day.spots.length-1&&<div style={{width:2,height:20,background:"linear-gradient(180deg, "+circCol+" 0%, "+TN.bd+" 100%)",marginTop:4,borderRadius:1}}/>}
+          </div>
+          <div style={{flex:1,background:bgCol,borderRadius:(isMeal||isHotel)?16:0,padding:(isMeal||isHotel)?"14px 16px":"0",border:(isMeal||isHotel)?"1px solid "+(isMeal?"#ffe8cc":"#e9d5ff"):"none"}}>
+            <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+              {isMeal&&<span style={{fontSize:10,fontWeight:600,color:"#d97706",background:"linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)",borderRadius:8,padding:"4px 10px",border:"1px solid #fbbf24"}}>{ML[site._ml]}</span>}
+              {isHotel&&<span style={{fontSize:10,fontWeight:600,color:"#7c3aed",background:"linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%)",borderRadius:8,padding:"4px 10px",border:"1px solid #c084fc"}}>🏨 Hébergement 5★</span>}
+              <span style={{fontSize:15,fontWeight:600,fontFamily:F,color:TN.tx}}>{site.n}</span>
+              <span style={{fontSize:14}}>{CATS[site.cat]?.i}</span>
+            </div>
+            <div style={{fontSize:11,color:TN.tM,marginTop:6,lineHeight:1.6}}>{site.d}</div>
+            <div style={{display:"flex",gap:10,marginTop:8,fontSize:10,color:TN.tM,fontWeight:500}}>{!isHotel&&<span style={{background:TN.sand,padding:"4px 10px",borderRadius:8,border:"1px solid #ffe8cc"}}>⏱ {site.alM}min</span>}<span style={{background:site.cost?TN.aL:TN.sand+"80",padding:"4px 10px",borderRadius:8,border:"1px solid "+(site.cost?"#90caf9":"#e0e0e0")}}>{site.cost?site.cost+"TND":"Gratuit"}</span><span style={{background:"linear-gradient(135deg, #fff9c4 0%, #ffeb3b30 100%)",padding:"4px 10px",borderRadius:8,border:"1px solid #fdd835"}}>⭐ {site.rt}</span>{i>0&&day.spots[i-1]&&site.lt&&day.spots[i-1].lt?<span style={{background:TN.card,padding:"4px 10px",borderRadius:8,border:"1px solid "+TN.bd}}>🚗 {Math.round(Math.sqrt(Math.pow((site.lt-day.spots[i-1].lt)*111,2)+Math.pow((site.lg-day.spots[i-1].lg)*90,2)))}km</span>:null}</div>
+          </div>
+        </div>})}
+    </div>;
+  };
+
+  // AUTH
+  if(!user)return(
+    <div style={{minHeight:"100vh",background:"linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:F2,color:"#fff"}}>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+      <div style={{width:"100%",maxWidth:440,padding:32}}>
+        <div style={{background:"rgba(255,255,255,0.98)",borderRadius:24,padding:"48px 40px",boxShadow:"0 20px 60px rgba(0,0,0,0.3)",backdropFilter:"blur(10px)"}}>
+          <div style={{textAlign:"center",marginBottom:32}}><Logo size={72}/><h1 style={{fontSize:32,fontWeight:700,fontFamily:F,color:TN.tx,margin:"12px 0 4px",letterSpacing:"-0.5px"}}>TUN Trip</h1><p style={{fontSize:14,color:TN.tM,fontFamily:F}}>Découvrez les perles de la Tunisie</p></div>
+          <div style={{display:"flex",marginBottom:24,background:TN.sand,borderRadius:14,padding:4}}>
+            {["login","signup"].map(function(m){return <button key={m} onClick={function(){setAMode(m);setAErr("")}} style={{flex:1,padding:"12px 20px",border:"none",cursor:"pointer",fontSize:14,fontWeight:600,fontFamily:F2,background:aMode===m?"#fff":"transparent",color:aMode===m?TN.tx:TN.tM,borderRadius:12,boxShadow:aMode===m?TN.shadow:"none",transition:"all 0.3s ease"}}>{m==="login"?"Connexion":"Inscription"}</button>})}
+          </div>
+          <div style={{display:"flex",flexDirection:"column",gap:14}}>
+            {aMode==="signup"&&<input value={aN} onChange={function(e){setAN(e.target.value)}} placeholder="Votre nom" style={{padding:"16px 18px",borderRadius:14,border:"2px solid "+TN.bd,background:TN.bg,color:TN.tx,fontSize:15,fontFamily:F2,outline:"none",transition:"all 0.3s ease"}}/>}
+            <input value={aE} onChange={function(e){setAE(e.target.value)}} placeholder="Email" style={{padding:"16px 18px",borderRadius:14,border:"2px solid "+TN.bd,background:TN.bg,color:TN.tx,fontSize:15,fontFamily:F2,outline:"none",transition:"all 0.3s ease"}}/>
+            <input value={aP} onChange={function(e){setAP(e.target.value)}} placeholder="Mot de passe" type="password" style={{padding:"16px 18px",borderRadius:14,border:"2px solid "+TN.bd,background:TN.bg,color:TN.tx,fontSize:15,fontFamily:F2,outline:"none",transition:"all 0.3s ease"}} onKeyDown={function(e){if(e.key==="Enter")doAuth()}}/>
+            {aErr&&<div style={{fontSize:12,color:"#dc2626",background:"#fee2e2",borderRadius:12,padding:"12px 16px",fontWeight:500}}>{aErr}</div>}
+            <button onClick={doAuth} style={Object.assign({},btn,{marginTop:8})}>{aMode==="login"?"Se connecter":"Créer mon compte"}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  return(
+    <div style={{minHeight:"100vh",background:TN.bg,fontFamily:F2,color:TN.tx}}>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+      <div style={{background:"linear-gradient(135deg, #667eea 0%, #764ba2 100%)",padding:"16px 20px",position:"sticky",top:0,zIndex:50,boxShadow:TN.shadowMd}}>
+        <div style={{maxWidth:640,margin:"0 auto",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <div onClick={function(){setVw("home")}} style={{display:"flex",alignItems:"center",gap:10,cursor:"pointer",transition:"transform 0.2s ease"}}><Logo size={36}/><span style={{fontSize:20,fontWeight:700,fontFamily:F,color:"#fff",letterSpacing:"-0.5px"}}>TUN Trip</span></div>
+          <div style={{display:"flex",alignItems:"center",gap:10}}><span style={{fontSize:13,color:"#fff",fontWeight:500}}>{user.nm}</span><button onClick={function(){setUser(null)}} style={{fontSize:11,padding:"8px 16px",borderRadius:10,border:"2px solid rgba(255,255,255,0.3)",background:"rgba(255,255,255,0.15)",cursor:"pointer",color:"#fff",fontWeight:600,backdropFilter:"blur(10px)",transition:"all 0.3s ease"}}>Déconnexion</button></div>
+        </div>
+      </div>
+
+      <div style={{position:"fixed",bottom:0,left:0,right:0,background:"rgba(255,255,255,0.98)",borderTop:"1px solid "+TN.bd,display:"flex",justifyContent:"center",gap:60,padding:"12px 0 16px",zIndex:50,boxShadow:"0 -4px 16px rgba(0,0,0,0.08)",backdropFilter:"blur(10px)"}}>
+        {[{v:"home",i:"✨",l:"Nouveau"},{v:"trips",i:"📋",l:"Mes Voyages"}].map(function(t){return <button key={t.v} onClick={function(){setVw(t.v)}} style={{background:"none",border:"none",cursor:"pointer",textAlign:"center",color:vw===t.v?TN.pr:TN.tL,transition:"all 0.3s ease",transform:vw===t.v?"scale(1.05)":"scale(1)"}}><div style={{fontSize:24,marginBottom:4}}>{t.i}</div><div style={{fontSize:10,fontWeight:600,letterSpacing:"0.5px"}}>{t.l}</div></button>})}
+      </div>
+
+      <div style={{maxWidth:640,margin:"0 auto",padding:"16px 16px 80px"}}>
+
+        {vw==="home"&&<div>
+          <Carousel/>
+          <div style={{textAlign:"center",marginBottom:20}}>
+            <p style={{fontSize:14,color:TN.pr,fontWeight:600,fontFamily:F,letterSpacing:.8,margin:"0 0 16px"}}>Découvrez les perles de la Tunisie</p>
+            <div style={{background:TN.card,borderRadius:20,padding:"20px 24px",border:"1px solid "+TN.bd,textAlign:"left",marginBottom:20,boxShadow:TN.shadow}}>
+              <p style={{fontSize:13,color:TN.tM,lineHeight:1.8,margin:0}}>La Tunisie, carrefour de civilisations entre Sahara et Méditerranée. Des ruines romaines de Dougga aux plages turquoise de Djerba, des médinas millénaires aux oasis du Sud — chaque région raconte une histoire unique. Planifiez votre voyage et explorez 262 destinations à travers 11 régions.</p>
+            </div>
+            <h2 style={{fontSize:28,fontWeight:700,fontFamily:F,color:TN.tx,margin:"0 0 8px",letterSpacing:"-0.5px"}}>Bienvenue, {user.nm}</h2>
+            <p style={{fontSize:14,color:TN.tM,fontFamily:F}}>Comment souhaitez-vous explorer ?</p>
+          </div>
+
+          <div onClick={function(){setVw("ai_prefs")}} style={{background:"linear-gradient(135deg, #667eea 0%, #764ba2 100%)",borderRadius:24,padding:28,cursor:"pointer",marginBottom:16,position:"relative",overflow:"hidden",boxShadow:TN.shadowLg,transition:"transform 0.3s ease,box-shadow 0.3s ease",border:"none"}}>
+            <div style={{position:"absolute",inset:0,opacity:.1,backgroundImage:"repeating-linear-gradient(45deg,#fff 0,#fff 2px,transparent 2px,transparent 16px)"}}/>
+            <div style={{position:"relative"}}><div style={{display:"flex",alignItems:"center",gap:14,marginBottom:10}}><div style={{width:52,height:52,borderRadius:16,background:"rgba(255,255,255,0.25)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,fontWeight:700,color:"#fff",backdropFilter:"blur(10px)"}}>AI</div><div><div style={{fontSize:22,fontWeight:700,fontFamily:F,color:"#fff",letterSpacing:"-0.3px"}}>L'IA planifie pour moi</div><div style={{fontSize:11,color:"rgba(255,255,255,0.9)",background:"rgba(255,255,255,0.2)",borderRadius:8,padding:"4px 12px",display:"inline-block",fontWeight:600,marginTop:4}}>✨ Recommandé</div></div></div>
+            <p style={{fontSize:14,color:"rgba(255,255,255,0.95)",lineHeight:1.7,margin:0}}>L'IA choisit les régions et les meilleurs spots pour chaque jour selon vos préférences.</p></div>
+          </div>
+          <div onClick={function(){setVw("man_prefs")}} style={Object.assign({},cs,{cursor:"pointer",padding:28,borderWidth:2,transition:"all 0.3s ease",borderColor:TN.bd})}>
+            <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:10}}><div style={{width:52,height:52,borderRadius:16,background:"linear-gradient(135deg, "+TN.sand+" 0%, #ffe8cc 100%)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,fontWeight:700,color:TN.pD,border:"2px solid "+TN.sD}}>M</div><div><div style={{fontSize:22,fontWeight:700,fontFamily:F,color:TN.tx,letterSpacing:"-0.3px"}}>Je choisis moi-même</div><div style={{fontSize:12,color:TN.tM,marginTop:2}}>Sélection manuelle par région</div></div></div>
+            <p style={{fontSize:14,color:TN.tM,lineHeight:1.7,margin:0}}>Choisissez une région, filtrez par catégorie, composez votre itinéraire personnalisé.</p>
+          </div>
+        </div>}
+
+        {/* AI PREFS — ONLY: preferences + companions + days */}
+        {vw==="ai_prefs"&&<div>
+          {back(function(){setVw("home")})}
+          <div style={{textAlign:"center",marginBottom:24}}><div style={{fontSize:22,fontWeight:700,color:"#fff",background:"linear-gradient(135deg, #667eea 0%, #764ba2 100%)",width:56,height:56,borderRadius:16,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto",boxShadow:TN.shadowMd}}>AI</div><h2 style={{fontSize:30,fontWeight:700,fontFamily:F,color:TN.tx,margin:"12px 0 6px",letterSpacing:"-0.5px"}}>Voyage intelligent</h2><p style={{fontSize:14,color:TN.tM,fontFamily:F}}>Dites-nous vos envies, on fait le reste</p></div>
+
+          <div style={cs}><div style={ls}>🎭 Qu'est-ce qui vous passionne ?</div>
+            <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>{Object.keys(PROFILES).map(function(k){var p=PROFILES[k];var s=profs.indexOf(k)>=0;return <button key={k} onClick={function(){togP(k)}} style={{padding:"14px 20px",borderRadius:32,cursor:"pointer",border:s?"2px solid "+TN.pr:"2px solid "+TN.bd,background:s?"linear-gradient(135deg,"+TN.pr+" 0%, "+TN.pD+" 100%)":"#fff",fontSize:14,fontWeight:600,color:s?"#fff":TN.tM,boxShadow:s?TN.shadowMd:"none",transition:"all 0.3s ease",transform:s?"scale(1.02)":"scale(1)"}}>{p.i} {p.l}</button>})}</div>
+          </div>
+
+          <div style={Object.assign({},cs,{marginTop:16})}><div style={ls}>👥 Avec qui voyagez-vous ?</div>
+            <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>{COMPS.map(function(c){return <button key={c.k} onClick={function(){setComp(c.k)}} style={{padding:"14px 20px",borderRadius:16,cursor:"pointer",border:comp===c.k?"2px solid "+TN.ac:"2px solid "+TN.bd,background:comp===c.k?"linear-gradient(135deg, "+TN.aL+" 0%, #e3f2fd 100%)":"#fff",fontSize:14,fontWeight:600,color:comp===c.k?TN.ac:TN.tM,transition:"all 0.3s ease",boxShadow:comp===c.k?TN.shadow:"none",transform:comp===c.k?"scale(1.02)":"scale(1)"}}>{c.i} {c.l}</button>})}</div>
+          </div>
+
+          <div style={Object.assign({},cs,{marginTop:14})}><div style={ls}>🗺️ Zones & Régions <span style={{fontSize:8,fontWeight:400,color:TN.tL}}>(choix multiple)</span></div>
+            {/* Toggle zone helper */}
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+              {Object.keys(ZONES).filter(function(k){return ZONES[k].g==="top"}).map(function(k){var z=ZONES[k];var isSel=zones.indexOf(k)>=0;return <button key={k} onClick={function(){setZones(function(prev){if(k==="all")return["all"];var next=prev.filter(function(x){return x!=="all"&&ZONES[x]?.g==="top"});var idx=next.indexOf(k);if(idx>=0){next.splice(idx,1);return next.length?next:["all"]}next.push(k);return next})}} style={{padding:"10px 8px",borderRadius:12,cursor:"pointer",border:isSel?"2.5px solid "+TN.tile:"1.5px solid "+TN.bd,background:isSel?"linear-gradient(135deg,"+TN.aL+",#fff)":TN.card,textAlign:"center",transition:"all .15s"}}>
+                <div style={{fontSize:18}}>{z.i}</div>
+                <div style={{fontSize:11,fontWeight:700,color:isSel?TN.tile:TN.tM,marginTop:2}}>{z.l}</div>
+                <div style={{fontSize:8,color:TN.tL}}>{z.regions.length} régions</div>
+              </button>})}
+            </div>
+            <div style={{fontSize:9,fontWeight:700,color:TN.tL,textTransform:"uppercase",letterSpacing:1,marginTop:10,marginBottom:6}}>Ou choisir des régions</div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:5}}>
+              {Object.keys(ZONES).filter(function(k){return ZONES[k].g==="reg"}).map(function(k){var z=ZONES[k];var rc=PL.filter(function(p){return z.regions.indexOf(p.r)>=0}).length;var isSel=zones.indexOf(k)>=0;return <button key={k} onClick={function(){setZones(function(prev){var next=prev.filter(function(x){return x!=="all"&&ZONES[x]?.g!=="top"});var idx=next.indexOf(k);if(idx>=0){next.splice(idx,1);return next.length?next:["all"]}next.push(k);return next})}} style={{padding:"8px 4px",borderRadius:10,cursor:"pointer",border:isSel?"2px solid "+TN.pr:"1px solid "+TN.bd,background:isSel?"linear-gradient(135deg,"+TN.sand+",#fff)":TN.card,textAlign:"center",transition:"all .15s"}}>
+                <div style={{fontSize:14}}>{z.i}</div>
+                <div style={{fontSize:9,fontWeight:700,color:isSel?TN.pD:TN.tM,marginTop:1}}>{z.l}</div>
+                <div style={{fontSize:7,color:TN.tL}}>{rc} lieux</div>
+              </button>})}
+            </div>
+            <div style={{fontSize:9,color:TN.tM,marginTop:6}}>✅ {zones.indexOf("all")>=0?"Toutes les régions":zones.map(function(k){return ZONES[k]?.i||""}).join(" ")+" sélectionnée"+(zones.length>1?"s":"")}</div>
+          </div>
+
+          <div style={Object.assign({},cs,{marginTop:16})}><div style={ls}>📅 Combien de jours ?</div>
+            <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>{[1,2,3,5,7,10,14].map(function(d){return <button key={d} onClick={function(){setND(d)}} style={{width:56,height:56,borderRadius:16,cursor:"pointer",border:nD===d?"2px solid "+TN.pr:"2px solid "+TN.bd,background:nD===d?"linear-gradient(135deg,"+TN.pr+" 0%,"+TN.pD+" 100%)":"#fff",color:nD===d?"#fff":TN.tM,fontSize:22,fontWeight:700,fontFamily:F,transition:"all 0.3s ease",boxShadow:nD===d?TN.shadowMd:"none",transform:nD===d?"scale(1.05)":"scale(1)"}}>{d}</button>})}</div>
+            <div style={{fontSize:12,color:TN.tM,marginTop:12,lineHeight:1.7,background:TN.sand+"60",padding:"12px 16px",borderRadius:12}}>{nD} jour{nD>1?"s":""} — destinations proches (max 40km), max 5 spots/jour</div>
+          </div>
+
+          <div style={Object.assign({},cs,{marginTop:16})}><div style={ls}>💰 Budget maximum</div>
+            <div style={{display:"flex",alignItems:"baseline",gap:8,marginTop:8}}>
+              <span style={{fontSize:36,fontWeight:700,fontFamily:F,color:TN.pr,letterSpacing:"-1px"}}>{bud}</span>
+              <span style={{fontSize:16,color:TN.tM,fontWeight:600}}>TND</span>
+              <span style={{fontSize:14,color:TN.tL,marginLeft:"auto",background:TN.sand,padding:"6px 14px",borderRadius:10,border:"1px solid "+TN.sD}}>≈ {Math.round(bud*0.29)} EUR</span>
+            </div>
+            <input type="range" min={50} max={6000} step={50} value={bud} onChange={function(e){setBud(Number(e.target.value))}} style={{width:"100%",marginTop:16,accentColor:TN.pr,height:8,borderRadius:8}}/>
+            <div style={{display:"flex",justifyContent:"space-between",fontSize:11,color:TN.tM,marginTop:8,fontWeight:500}}><span>50 TND</span><span>6000 TND</span></div>
+          </div>
+
+          <div style={Object.assign({},cs,{marginTop:16})}><div style={ls}>🍽️ Inclure les repas ?</div>
+            <div style={{display:"flex",gap:10}}>
+              {[{k:"bk",v:wBk,fn:setWBk,i:"🌅",l:"Petit-déj"},{k:"lu",v:wLu,fn:setWLu,i:"☀️",l:"Déjeuner"},{k:"di",v:wDi,fn:setWDi,i:"🌙",l:"Dîner"}].map(function(m){return <button key={m.k} onClick={function(){m.fn(!m.v)}} style={{flex:1,padding:"16px 10px",borderRadius:16,cursor:"pointer",border:m.v?"2px solid "+TN.gn:"2px solid "+TN.bd,background:m.v?"linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%)":"#fff",textAlign:"center",transition:"all 0.3s ease",boxShadow:m.v?TN.shadow:"none",transform:m.v?"scale(1.02)":"scale(1)"}}>
+                <div style={{fontSize:20,marginBottom:4}}>{m.i}</div>
+                <div style={{fontSize:11,fontWeight:600,color:m.v?TN.gn:TN.tL}}>{m.l}</div>
+              </button>})}
+            </div>
+          </div>
+
+          {(wBk||wLu||wDi||profs.indexOf("hotelier")>=0)&&<div style={{background:"linear-gradient(135deg, #fff9e6 0%, #fff3cc 100%)",borderRadius:16,padding:18,border:"2px solid #ffe699",marginTop:16,boxShadow:TN.shadow}}>
+            <div style={{fontSize:14,fontWeight:700,color:"#d97706",marginBottom:8}}>📋 Inclus dans votre plan</div>
+            <div style={{display:"flex",gap:12,fontSize:12,color:TN.tM,flexWrap:"wrap",fontWeight:500}}>
+              {wBk&&<span style={{background:"#fff",padding:"6px 12px",borderRadius:10,border:"1px solid #fbbf24"}}>🌅 Petit-déj</span>}{wLu&&<span style={{background:"#fff",padding:"6px 12px",borderRadius:10,border:"1px solid #fbbf24"}}>☀️ Déjeuner</span>}{wDi&&<span style={{background:"#fff",padding:"6px 12px",borderRadius:10,border:"1px solid #fbbf24"}}>🌙 Dîner</span>}{profs.indexOf("hotelier")>=0&&<span style={{background:"#fff",padding:"6px 12px",borderRadius:10,border:"1px solid #fbbf24"}}>🏨 Hôtel 5★</span>}
+            </div>
+          </div>}
+          {!wBk&&!wLu&&!wDi&&profs.indexOf("hotelier")<0&&<div style={{background:"linear-gradient(135deg, "+TN.aL+" 0%, #e3f2fd 100%)",borderRadius:16,padding:18,border:"2px solid #90caf9",marginTop:16,boxShadow:TN.shadow}}>
+            <div style={{fontSize:13,color:TN.ac,fontWeight:600}}>ℹ️ Plan destinations uniquement</div>
+          </div>}
+
+          <button onClick={aiGo} disabled={!profs.length} style={Object.assign({},btn,{marginTop:20,opacity:profs.length?1:.5,fontSize:17,padding:"18px 24px",cursor:profs.length?"pointer":"not-allowed"})}>{profs.length?"🚀 Créer mon voyage":"Sélectionnez au moins un style"}</button>
+        </div>}
+
+        {vw==="ai_load"&&<div>{back(function(){setVw("ai_prefs")})}{LoadUI}</div>}
+
+        {/* AI RESULT */}
+        {vw==="ai_result"&&itin&&<div>
+          {back(function(){setVw("ai_prefs")})}
+          <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:16}}>
+            {profs.map(function(k){return <span key={k} style={{fontSize:11,fontWeight:600,background:"linear-gradient(135deg, "+TN.sand+" 0%, #ffe8cc 100%)",color:TN.pD,borderRadius:24,padding:"6px 14px",border:"1px solid "+TN.sD,boxShadow:"0 2px 4px rgba(0,0,0,0.05)"}}>{PROFILES[k].i} {PROFILES[k].l}</span>})}
+            <span style={{fontSize:11,fontWeight:600,background:"linear-gradient(135deg, "+TN.aL+" 0%, #e3f2fd 100%)",color:TN.ac,borderRadius:24,padding:"6px 14px",border:"1px solid #90caf9",boxShadow:"0 2px 4px rgba(0,0,0,0.05)"}}>{COMPS.find(function(c){return c.k===comp})?.i} {COMPS.find(function(c){return c.k===comp})?.l}</span>
+            <span style={{fontSize:11,fontWeight:600,background:"linear-gradient(135deg, #fff9c4 0%, #fff59d 100%)",color:"#d97706",borderRadius:24,padding:"6px 14px",border:"1px solid #fdd835",boxShadow:"0 2px 4px rgba(0,0,0,0.05)"}}>{nD}j</span>
+            <span style={{fontSize:11,fontWeight:600,background:"linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",color:TN.tile,borderRadius:24,padding:"6px 14px",border:"1px solid #64b5f6",boxShadow:"0 2px 4px rgba(0,0,0,0.05)"}}>{zones.indexOf("all")>=0?"🇹🇳 Toute la Tunisie":zones.map(function(k){return(ZONES[k]?.i||"")+" "+(ZONES[k]?.l||"")}).join(" · ")}</span>
+          </div>
+          {(function(){var dr=REGIONS.find(function(r){return r.id===(itin.days[aD]?.rid)});return <LeafletMap lt={dr?.lt||34.5} lg={dr?.lg||9.5} z={dr?10:7} h={240} spots={itin.days[aD]?.spots||[]} activeRid={itin.days[aD]?.rid}/>})()}
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:16,marginBottom:12}}>
+            <div><div style={{fontSize:26,fontWeight:700,fontFamily:F,color:TN.tx,letterSpacing:"-0.5px"}}>Votre voyage</div><div style={{fontSize:13,color:TN.tM,marginTop:4,fontWeight:500}}>{itin.stats.total} spots{itin.stats.meals?" · "+itin.stats.meals+" repas":""}{itin.stats.hotels?" · "+itin.stats.hotels+" hôtels":""} · ~{itin.stats.cost} TND (≈{Math.round(itin.stats.cost*0.29)} EUR)</div></div>
+            <button onClick={saveTrip} style={{padding:"12px 20px",borderRadius:12,border:"none",background:"linear-gradient(135deg, "+TN.gn+" 0%, #43a047 100%)",color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer",boxShadow:TN.shadow,transition:"all 0.3s ease"}}>💾 Sauver</button>
+          </div>
+          <div style={{display:"flex",gap:8,marginBottom:16,marginTop:12,overflowX:"auto",paddingBottom:4}}>{itin.days.map(function(day,i){var dr=REGIONS.find(function(r){return r.id===day.rid});return <button key={i} onClick={function(){setAD(i)}} style={{padding:"12px 18px",borderRadius:14,border:aD===i?"2px solid "+TN.pD:"2px solid "+TN.bd,background:aD===i?"linear-gradient(135deg, "+TN.pD+" 0%, "+TN.pr+" 100%)":"#fff",color:aD===i?"#fff":TN.tM,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:F,whiteSpace:"nowrap",boxShadow:aD===i?TN.shadowMd:"none",transition:"all 0.3s ease",transform:aD===i?"scale(1.02)":"scale(1)"}}>{dr?.icon} Jour {i+1}</button>})}</div>
+          <DayView day={itin.days[aD]} di={aD}/>
+          <div style={Object.assign({},cs,{marginTop:16})}>
+            <div style={{fontSize:18,fontWeight:700,fontFamily:F,color:TN.tx,marginBottom:12,letterSpacing:"-0.3px"}}>🗺️ Vue d'ensemble</div>
+            {itin.days.map(function(day,di){var dr=REGIONS.find(function(r){return r.id===day.rid});return <div key={di} style={{padding:"12px 14px",background:di%2===0?"linear-gradient(135deg, "+TN.sand+"60 0%, #fff 100%)":"#fff",borderRadius:12,marginBottom:8,border:"1px solid "+(di%2===0?TN.sD:TN.bd)}}>
+              <span style={{fontSize:14,fontWeight:700,fontFamily:F,color:TN.pD}}>Jour {di+1} {dr?.icon} {dr?.name}: </span>
+              <span style={{fontSize:12,color:TN.tM,lineHeight:1.6}}>{day.spots.map(function(s){return(s._ml?"🍽 ":"")+ s.n}).join(" → ")}</span>
+            </div>})}
+          </div>
+          <button onClick={function(){setVw("home")}} style={{width:"100%",padding:"16px 24px",borderRadius:14,border:"2px solid "+TN.bd,fontSize:14,fontWeight:600,cursor:"pointer",color:TN.tM,background:"#fff",marginTop:16,fontFamily:F,transition:"all 0.3s ease"}}>← Nouveau voyage</button>
+        </div>}
+
+        {/* MANUAL PREFS */}
+        {vw==="man_prefs"&&<div>
+          {back(function(){setVw("home")})}
+          <div style={{textAlign:"center",marginBottom:14}}><h2 style={{fontSize:24,fontWeight:700,fontFamily:F,color:TN.pD,margin:"4px 0"}}>Selection manuelle</h2><p style={{fontSize:12,color:TN.tL,fontStyle:"italic",fontFamily:F}}>Personnalisez chaque detail</p></div>
+
+          <div style={cs}><div style={ls}>🗓️ Saison de voyage</div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:6}}>{Object.keys(SEASONS).map(function(k){var s=SEASONS[k];return <button key={k} onClick={function(){setSea(k)}} style={{padding:"10px 6px",borderRadius:12,cursor:"pointer",textAlign:"center",border:sea===k?"2px solid "+TN.pr:"1px solid "+TN.bd,background:sea===k?TN.sand:TN.card}}><div style={{fontSize:18}}>{s.i}</div><div style={{fontSize:11,fontWeight:700,color:sea===k?TN.pD:TN.tM,marginTop:2}}>{s.l}</div><div style={{fontSize:8,color:TN.tL}}>{s.s}</div></button>})}</div>
+          </div>
+
+          <div style={Object.assign({},cs,{marginTop:12})}><div style={ls}>Destinations <span style={{fontSize:8,fontWeight:400,color:TN.tL}}>({rc(regs)} lieux, choix multiple)</span></div><div style={{display:"flex",gap:5,flexWrap:"wrap"}}>{REGIONS.map(function(r){var isSel=regs.indexOf(r.id)>=0;return <button key={r.id} onClick={function(){setRegs(function(prev){var idx=prev.indexOf(r.id);if(idx>=0){var next=prev.filter(function(x){return x!==r.id});return next.length?next:[r.id]}return prev.concat([r.id])})}} style={{padding:"7px 11px",borderRadius:10,cursor:"pointer",border:isSel?"2px solid "+TN.pr:"1px solid "+TN.bd,background:isSel?TN.sand:TN.card,fontSize:10,fontWeight:600,color:isSel?TN.pD:TN.tM}}>{r.icon} {r.name}</button>})}</div>
+          {rObj&&<div style={{marginTop:8}}><LeafletMap lt={rObj.lt} lg={rObj.lg} z={regs.length>2?7:rObj.id==="sud_est"||rObj.id==="sud_ouest"?8:10} h={200} spots={PL.filter(function(p){return regs.indexOf(p.r)>=0}).slice(0,15)} activeRid={regs[0]}/></div>}
+          {<div style={{display:"flex",gap:4,marginTop:8,flexWrap:"wrap"}}>{regs.map(function(rid){var rr=REGIONS.find(function(x){return x.id===rid});return rr?rr.subs.map(function(s){return <span key={s} style={{fontSize:9,background:TN.sand,borderRadius:6,padding:"3px 8px",color:TN.pD,fontWeight:600}}>{s}</span>}):null})}</div>}
+          </div>
+
+          <div style={Object.assign({},cs,{marginTop:12})}><div style={ls}>👥 Compagnons</div>
+            <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>{COMPS.map(function(c){return <button key={c.k} onClick={function(){setComp(c.k)}} style={{padding:"8px 14px",borderRadius:10,cursor:"pointer",border:comp===c.k?"2px solid "+TN.ac:"1px solid "+TN.bd,background:comp===c.k?TN.aL:TN.card,fontSize:11,fontWeight:600,color:comp===c.k?TN.ac:TN.tM}}>{c.i} {c.l}</button>})}</div>
+          </div>
+
+          <div style={Object.assign({},cs,{marginTop:12})}><div style={ls}>🎭 Style de voyage <span style={{color:TN.pr}}>(multi-sélection)</span></div>
+            <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>{Object.keys(PROFILES).map(function(k){var p=PROFILES[k];var s=profs.indexOf(k)>=0;return <button key={k} onClick={function(){togP(k)}} style={{padding:"7px 13px",borderRadius:24,cursor:"pointer",border:s?"2px solid "+TN.pr:"1px solid "+TN.bd,background:s?TN.sand:TN.card,fontSize:11,fontWeight:600,color:s?TN.pD:TN.tM}}>{p.i} {p.l}</button>})}</div>
+          </div>
+
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginTop:12}}>
+            <div style={cs}>
+              <div style={{fontSize:9,fontWeight:700,color:TN.tL,textTransform:"uppercase"}}>🕐 Heure de départ</div>
+              <div style={{display:"flex",alignItems:"baseline",gap:2,marginTop:4}}><span style={{fontSize:28,fontWeight:700,fontFamily:F,color:TN.pD}}>{sH}</span><span style={{fontSize:14,color:TN.tL}}>h00</span></div>
+              <input type="range" min={6} max={14} value={sH} onChange={function(e){setSH(Number(e.target.value))}} style={{width:"100%",accentColor:TN.pr}}/>
+            </div>
+            <div style={cs}>
+              <div style={{fontSize:9,fontWeight:700,color:TN.tL,textTransform:"uppercase"}}>📅 Nombre de jours</div>
+              <div style={{display:"flex",alignItems:"baseline",gap:2,marginTop:4}}><span style={{fontSize:28,fontWeight:700,fontFamily:F,color:TN.pD}}>{nD}</span><span style={{fontSize:14,color:TN.tL}}> jour{nD>1?"s":""}</span></div>
+              <input type="range" min={1} max={14} value={nD} onChange={function(e){setND(Number(e.target.value))}} style={{width:"100%",accentColor:TN.pr}}/>
+            </div>
+          </div>
+
+          <div style={Object.assign({},cs,{marginTop:12})}>
+            <div style={{fontSize:9,fontWeight:700,color:TN.tL,textTransform:"uppercase"}}>💰 Budget max</div>
+            <div style={{display:"flex",alignItems:"baseline",gap:4,marginTop:4}}><span style={{fontSize:28,fontWeight:700,fontFamily:F,color:TN.pD}}>{bud}</span><span style={{fontSize:14,color:TN.tL}}>TND</span><span style={{fontSize:12,color:TN.tM,marginLeft:6}}>≈ {Math.round(bud*0.29)} EUR</span></div>
+            <input type="range" min={50} max={6000} step={50} value={bud} onChange={function(e){setBud(Number(e.target.value))}} style={{width:"100%",accentColor:TN.pr}}/>
+            <div style={{display:"flex",justifyContent:"space-between",fontSize:9,color:TN.tL}}><span>50 TND</span><span>6000 TND</span></div>
+          </div>
+
+          <div style={Object.assign({},cs,{marginTop:12})}><div style={{fontSize:9,fontWeight:700,color:TN.tL,textTransform:"uppercase"}}>🍽️ Inclure les repas</div>
+            <div style={{display:"flex",gap:6,marginTop:6}}>
+              {[{k:"bk",v:wBk,fn:setWBk,i:"🌅",l:"Petit-déj"},{k:"lu",v:wLu,fn:setWLu,i:"☀️",l:"Déjeuner"},{k:"di",v:wDi,fn:setWDi,i:"🌙",l:"Dîner"}].map(function(m){return <button key={m.k} onClick={function(){m.fn(!m.v)}} style={{flex:1,padding:"8px 4px",borderRadius:10,cursor:"pointer",border:m.v?"2px solid "+TN.gn:"1.5px solid "+TN.bd,background:m.v?"#eafaf1":TN.card,textAlign:"center",fontSize:10,fontWeight:700,color:m.v?TN.gn:TN.tL}}>
+                {m.i} {m.l} {m.v?"✓":""}
+              </button>})}
+            </div>
+          </div>
+
+          <div style={{display:"flex",gap:6,marginTop:12}}>
+            <button onClick={function(){setAvC(!avC)}} style={{flex:1,padding:"10px 12px",borderRadius:12,cursor:"pointer",border:avC?"2px solid "+TN.pr:"1px solid "+TN.bd,background:avC?TN.sand:TN.card,fontSize:11,fontWeight:600,color:avC?TN.pD:TN.tM,display:"flex",alignItems:"center",gap:6}}>Eviter la foule {avC?"✓":""}</button>
+            <button onClick={function(){setIH(!iH)}} style={{flex:1,padding:"10px 12px",borderRadius:12,cursor:"pointer",border:iH?"2px solid "+TN.pr:"1px solid "+TN.bd,background:iH?TN.sand:TN.card,fontSize:11,fontWeight:600,color:iH?TN.pD:TN.tM,display:"flex",alignItems:"center",gap:6}}>Pepites cachees {iH?"✓":""}</button>
+          </div>
+
+          <button onClick={manGo} disabled={!profs.length} style={Object.assign({},btn,{marginTop:14,opacity:profs.length?1:.5})}>Voir les {rc(regs)} spots</button>
+        </div>}
+
+        {vw==="man_sel"&&<div>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+            <div><div style={{fontSize:20,fontWeight:700,fontFamily:F,color:TN.pD}}>Choisissez vos spots</div><div style={{fontSize:11,color:TN.tL}}>{sel.size} selectionne(s) · {regs.map(function(r){return REGIONS.find(function(x){return x.id===r})?.name||""}).join(", ")}</div></div>
+            {back(function(){setVw("man_prefs")})}
+          </div>
+          <div style={{display:"flex",gap:5,marginBottom:10,overflowX:"auto",paddingBottom:4}}>
+            <button onClick={function(){setCatF("all")}} style={{padding:"6px 14px",borderRadius:20,border:catF==="all"?"2px solid "+TN.pD:"1px solid "+TN.bd,background:catF==="all"?TN.pD:TN.card,color:catF==="all"?"#fff":TN.tM,fontSize:11,fontWeight:600,cursor:"pointer",whiteSpace:"nowrap"}}>All</button>
+            {cats.map(function(c){return <button key={c} onClick={function(){setCatF(c)}} style={{padding:"6px 14px",borderRadius:20,border:catF===c?"2px solid "+TN.pD:"1px solid "+TN.bd,background:catF===c?TN.pD:TN.card,color:catF===c?"#fff":TN.tM,fontSize:11,fontWeight:600,cursor:"pointer",whiteSpace:"nowrap"}}>{CATS[c].i} {CATS[c].l}</button>})}
+          </div>
+          {rObj&&rObj.subs.map(function(sub){
+            var sites=scored.filter(function(s){return s.sub===sub&&(catF==="all"||s.cat===catF)});if(!sites.length)return null;
+            return <div key={sub} style={{marginBottom:14}}>
+              <div style={{fontSize:13,fontWeight:700,fontFamily:F,color:TN.pD,marginBottom:6}}>📌 {sub}</div>
+              {sites.map(function(site){var sl=sel.has(site.id);var inS=site.sn&&site.sn.indexOf(sea)>=0;
+                return <div key={site.id} onClick={function(){togS(site.id)}} style={{display:"flex",gap:10,alignItems:"center",padding:"10px 12px",borderRadius:14,cursor:"pointer",background:sl?TN.sand:TN.card,border:sl?"2px solid "+TN.pr:"1px solid "+TN.bd,marginBottom:6,opacity:inS?1:.45}}>
+                  <div style={{width:36,height:36,borderRadius:10,background:sl?TN.pr+"15":TN.sand,display:"flex",alignItems:"center",justifyContent:"center",fontSize:17}}>{CATS[site.cat].i}</div>
+                  <div style={{flex:1}}><div style={{fontSize:13,fontWeight:700,fontFamily:F,color:TN.tx}}>{site.hid?"✨ ":""}{site.n}{!inS?" ⚠️":""}</div><div style={{fontSize:9,color:TN.tL}}>{CATS[site.cat].l} · ⭐{site.rt} · Score {site.sc}{site.meal?" · "+ML[site.meal]:""}</div></div>
+                  <div style={{width:22,height:22,borderRadius:"50%",border:"2px solid "+(sl?TN.pr:TN.bd),background:sl?TN.pr:"transparent",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontSize:12,fontWeight:800}}>{sl?"✓":""}</div>
+                </div>})}
+            </div>})}
+          {sel.size>0&&<div style={{background:"#e8f4f8",borderRadius:10,padding:"8px 12px",marginBottom:8,border:"1px solid #b8d8e8"}}>
+            <div style={{fontSize:10,color:TN.ac,fontWeight:600}}>🛣️ Optimisation géographique activée</div>
+            <div style={{fontSize:9,color:TN.tM,marginTop:2}}>Les spots seront regroupés par proximité (max ~40km / ~30min) et ordonnés pour éviter les allers-retours.</div>
+          </div>}
+          <button onClick={manBuild} disabled={!sel.size} style={Object.assign({},btn,{position:"sticky",bottom:64,opacity:sel.size?1:.5})}>Creer ({sel.size} spots · {nD}j)</button>
+        </div>}
+
+        {vw==="man_load"&&LoadUI}
+
+        {vw==="man_result"&&itin&&<div>
+          {back(function(){setVw("man_sel")})}
+          {rObj&&<LeafletMap lt={rObj.lt} lg={rObj.lg} z={regs.length>2?8:10} h={200} spots={itin.days[aD]?.spots||[]} activeRid={regs[0]}/>}
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:12,marginBottom:4}}>
+            <div><div style={{fontSize:22,fontWeight:700,fontFamily:F,color:TN.pD}}>{rObj?.name}</div><div style={{fontSize:12,color:TN.tL}}>{itin.stats.days}j · {itin.stats.total} spots · {itin.stats.cost} TND (≈{Math.round(itin.stats.cost*0.29)} EUR)</div></div>
+            <button onClick={saveTrip} style={{padding:"8px 16px",borderRadius:10,border:"none",background:TN.pr,color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer"}}>💾 Sauver</button>
+          </div>
+          <div style={{display:"flex",gap:5,marginBottom:10,marginTop:6}}>{itin.days.map(function(_,i){return <button key={i} onClick={function(){setAD(i)}} style={{padding:"8px 16px",borderRadius:10,border:aD===i?"2px solid "+TN.pD:"1px solid "+TN.bd,background:aD===i?TN.pD:TN.card,color:aD===i?"#fff":TN.tM,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:F}}>Jour {i+1}</button>})}</div>
+          <DayView day={itin.days[aD]} di={aD}/>
+          <button onClick={function(){setVw("home")}} style={{width:"100%",padding:12,borderRadius:14,border:"2px solid "+TN.bd,fontSize:13,fontWeight:700,cursor:"pointer",color:TN.tM,background:TN.card,marginTop:10,fontFamily:F}}>← Nouveau voyage</button>
+        </div>}
+
+        {vw==="trips"&&<div>
+          <h2 style={{fontSize:24,fontWeight:700,fontFamily:F,color:TN.pD,margin:"8px 0 16px"}}>Mes Voyages</h2>
+          {!trips.length&&<div style={{textAlign:"center",padding:40,color:TN.tL}}>🧳 Aucun voyage</div>}
+          {trips.map(function(t){return <div key={t.id} onClick={function(){setAT(t);setVw("trip")}} style={Object.assign({},cs,{marginBottom:10,cursor:"pointer",display:"flex",gap:14,alignItems:"center"})}>
+            <div style={{fontSize:28}}>🧳</div><div><div style={{fontSize:15,fontWeight:700,fontFamily:F,color:TN.pD}}>{t.nm}</div><div style={{fontSize:11,color:TN.tL}}>{t.dy}j · {t.sp} spots · {t.dt}</div></div>
+          </div>})}
+        </div>}
+
+        {vw==="trip"&&aT&&<div>
+          {back(function(){setVw("trips")})}
+          <h2 style={{fontSize:22,fontWeight:700,fontFamily:F,color:TN.pD,marginBottom:10}}>{aT.nm}</h2>
+          {aT.it.days.map(function(day,di){var dr=REGIONS.find(function(r){return r.id===day.rid});return <div key={di} style={Object.assign({},cs,{marginBottom:8})}><div style={{fontSize:15,fontWeight:700,fontFamily:F,color:TN.pD}}>{dr?.icon} Jour {di+1} — {dr?.name}</div><div style={{fontSize:11,color:TN.tM,marginTop:4}}>{day.spots.map(function(s){return s.n}).join(" → ")}</div></div>})}
+        </div>}
+
+        <div style={{textAlign:"center",marginTop:20}}><div style={{height:2,background:"repeating-linear-gradient(90deg,"+TN.pr+" 0,"+TN.pr+" 5px,transparent 5px,transparent 8px)",marginBottom:6,opacity:.3}}/><div style={{fontSize:9,color:TN.tL}}>TUN Trip · {PL.length} lieux · {REGIONS.length} régions · AINC 2026</div></div>
+      </div>
+    </div>
+  );
+}
